@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Importance - {{ model_info.name }}</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .model-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+            background: {{ model_info.color }};
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .insights-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .insights-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .insight-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid {{ model_info.color }};
+        }
+        
+        .insight-card h4 {
+            color: {{ model_info.color }};
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .insight-card p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Feature Importance Analysis</h1>
+            <p>Understanding what drives {{ model_info.name }} predictions</p>
+        </div>
+        
+        <div class="content">
+            <div class="model-badge" style="background: {{ model_info.color }};">
+                {{ model_info.name }} ({{ model_info.accuracy }}% accuracy)
+            </div>
+            
+            <div class="chart-container">
+                <div id="importance-chart"></div>
+            </div>
+            
+            <div class="insights-section">
+                <h3>💡 Key Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h4>📊 Most Important Feature</h4>
+                        <p>The model relies heavily on contract type and tenure to make predictions. Customers with longer commitments are much less likely to churn.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h4>💰 Payment Methods Matter</h4>
+                        <p>Electronic check users show higher churn probability. Consider promoting automatic payment methods to reduce risk.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h4>📱 Service Impact</h4>
+                        <p>Customers with fiber optic internet and no tech support are at higher risk. Bundle support with internet packages.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h4>⏱️ Tenure Factor</h4>
+                        <p>New customers (less than 12 months) need extra attention. Implement onboarding programs for first-year customers.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">🔮 Make Prediction</a>
+                <a href="/dashboard" class="btn btn-secondary">📊 View Dashboard</a>
+                <button onclick="downloadData()" class="btn btn-secondary">📥 Download Data</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
+            <p>© 2026 Customer Churn Prediction Project</p>
+        </div>
+    </div>
+    
+    <script>
+        // Render the plotly chart
+        var graphJSON = {{ graphJSON | safe }};
+        Plotly.newPlot('importance-chart', graphJSON.data, graphJSON.layout, {
+            responsive: true,
+            displaylogo: false
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('importance-chart');
+        });
+        
+        // Download feature importance data
+        function downloadData() {
+            fetch(`/api/feature_importance/{{ model_name }}`)
+                .then(response => response.json())
+                .then(data => {
+                    let csv = 'Feature,Importance\n';
+                    for (let i = 0; i < data.features.length; i++) {
+                        csv += `${data.features[i]},${data.importance[i]}\n`;
+                    }
+                    
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'feature_importance.csv';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                });
+        }
+    </script>
+</body>
+</html>

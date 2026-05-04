@@ -1,0 +1,31 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Model files
+*.pkl
+*.joblib
+models/*.pkl
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs and outputs
+*.log
+*.png
+*.json
+!requirements.json
+
+# Local data (if sensitive)
+# data/WA_Fn-UseC_-Telco-Customer-Churn.csv
+
+# OS files
+.DS_Store
+Thumbs.db

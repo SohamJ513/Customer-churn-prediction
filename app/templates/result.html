@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results - Churn Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .result-section {
+            padding: 40px;
+        }
+        
+        .prediction-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .prediction-card.churn {
+            border-color: #dc3545;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.2);
+        }
+        
+        .prediction-card.stay {
+            border-color: #28a745;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+        }
+        
+        .model-used {
+            font-size: 1.2em;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        .prediction {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .prediction.churn {
+            color: #dc3545;
+        }
+        
+        .prediction.stay {
+            color: #28a745;
+        }
+        
+        .confidence {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+        
+        .probability {
+            font-size: 1.1em;
+            color: #495057;
+            margin-top: 10px;
+        }
+        
+        .insight-button {
+            margin-top: 20px;
+        }
+        
+        .btn-insight {
+            display: inline-block;
+            padding: 12px 25px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-insight:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .comparison-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+        
+        .comparison-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comparison-section h3:before {
+            content: "📊";
+            font-size: 1.2em;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .comparison-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .comparison-card[data-model="logistic"]::before {
+            background: #3498db;
+        }
+        
+        .comparison-card[data-model="tree"]::before {
+            background: #f39c12;
+        }
+        
+        .comparison-card[data-model="forest"]::before {
+            background: #2ecc71;
+        }
+        
+        .comparison-card h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            padding-top: 5px;
+        }
+        
+        .comparison-prediction {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .comparison-prediction.churn {
+            background: #fee;
+            color: #dc3545;
+        }
+        
+        .comparison-prediction.stay {
+            background: #efe;
+            color: #28a745;
+        }
+        
+        .comparison-confidence {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin: 10px 0;
+        }
+        
+        .comparison-prob {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+            font-weight: 500;
+        }
+        
+        .feature-link {
+            margin-top: 15px;
+            text-align: right;
+        }
+        
+        .feature-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .feature-link a:hover {
+            background: #f0f3ff;
+        }
+        
+        .feature-link a:after {
+            content: "→";
+            transition: transform 0.3s;
+        }
+        
+        .feature-link a:hover:after {
+            transform: translateX(5px);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: color 0.3s;
+        }
+        
+        .footer a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .share-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+        
+        .share-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: transform 0.3s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-btn.twitter { background: #1DA1F2; }
+        .share-btn.linkedin { background: #0077B5; }
+        .share-btn.email { background: #6c757d; }
+        
+        .dashboard-prompt {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px dashed #2196f3;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+        
+        .dashboard-prompt p {
+            color: #0d47a1;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        
+        .history-prompt {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px dashed #ff9800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .history-prompt p {
+            color: #e65100;
+            font-size: 1em;
+            margin: 0;
+        }
+        
+        .btn-history {
+            background: #ff9800;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-history:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animation for confidence bar */
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: {{ result.confidence|default(50) }}%; }
+        }
+        
+        .confidence-fill {
+            animation: fillBar 1s ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .nav-link {
+                justify-content: center;
+            }
+            
+            .prediction {
+                font-size: 2em;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                text-align: center;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-prompt {
+                flex-direction: column;
+            }
+            
+            .result-section {
+                padding: 20px;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .prediction-card {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+            }
+            
+            .share-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Prediction Results</h1>
+            <p>Customer churn analysis using three different ML models</p>
+            
+            <!-- Navigation Bar - Moved below title -->
+            <div class="nav-bar">
+                <a href="/" class="nav-link">
+                    <span>🏠</span> Home
+                </a>
+                <a href="/dashboard" class="nav-link">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="/history" class="nav-link">
+                    <span>📜</span> History
+                </a>
+            </div>
+        </div>
+        
+        <div class="result-section">
+            <!-- History Prompt - Shows after prediction -->
+            <div class="history-prompt">
+                <p>📜 This prediction has been saved to your history!</p>
+                <a href="/history" class="btn-history">
+                    <span>📋</span> View All Predictions
+                </a>
+            </div>
+            
+            <!-- Main Prediction -->
+            {% if result and result.prediction %}
+            <div class="prediction-card {% if result.prediction == 'CHURN' %}churn{% else %}stay{% endif %}">
+                <div class="model-used">
+                    🔮 Primary Model: <strong>{{ result.model_used }}</strong>
+                </div>
+                
+                <div class="prediction {% if result.prediction == 'CHURN' %}churn{% else %}stay{% endif %}">
+                    {% if result.prediction == 'CHURN' %}
+                        ⚠️ HIGH CHURN RISK
+                    {% else %}
+                        ✅ LOW CHURN RISK
+                    {% endif %}
+                </div>
+                
+                <div class="confidence">
+                    Confidence: {{ result.confidence }}%
+                </div>
+                
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: {{ result.confidence|default(50) }}%;"></div>
+                </div>
+                
+                <div class="probability">
+                    Churn Probability: {{ result.churn_probability|default(0) }}%
+                </div>
+                
+                <div class="insight-button">
+                    <a href="/feature_importance/{{ request.form.get('model', 'logistic') }}" class="btn-insight">
+                        🔍 See Why This Model Predicted {{ result.prediction }}
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Prompt -->
+            <div class="dashboard-prompt">
+                <p>📊 Want to see how all models compare? Check out the full performance dashboard!</p>
+                <a href="/dashboard" class="btn btn-info" style="display: inline-block; padding: 10px 25px;">
+                    <span>📈</span> View Complete Dashboard
+                </a>
+            </div>
+            
+            <!-- Model Comparison -->
+            {% if result.all_predictions %}
+            <div class="comparison-section">
+                <h3>All Models Comparison</h3>
+                <div class="comparison-grid">
+                    {% for model_name, pred in result.all_predictions.items() %}
+                    {% set model_key = 'logistic' if 'Logistic' in model_name else ('tree' if 'Decision' in model_name else 'forest') %}
+                    <div class="comparison-card" data-model="{{ model_key }}">
+                        <h4>{{ model_name }}</h4>
+                        <div>
+                            <span class="comparison-prediction {% if pred.prediction == 'CHURN' %}churn{% else %}stay{% endif %}">
+                                {{ pred.prediction }}
+                            </span>
+                        </div>
+                        <div class="comparison-confidence">
+                            Confidence: {{ pred.confidence }}%
+                        </div>
+                        <div class="comparison-prob">
+                            Churn Probability: {{ pred.churn_prob }}%
+                        </div>
+                        <div class="feature-link">
+                            <a href="/feature_importance/{{ model_key }}">
+                                🔍 View Feature Importance →
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Share Results Section -->
+            <div class="share-section">
+                <h4>📢 Share These Results</h4>
+                <div class="share-buttons">
+                    <button class="share-btn twitter" onclick="shareOnTwitter()">Twitter</button>
+                    <button class="share-btn linkedin" onclick="shareOnLinkedIn()">LinkedIn</button>
+                    <button class="share-btn email" onclick="shareByEmail()">Email</button>
+                </div>
+            </div>
+            
+            {% else %}
+            <div class="prediction-card">
+                <div class="model-used">
+                    🔮 Error
+                </div>
+                <div class="prediction">
+                    ❌ No prediction data available
+                </div>
+                <div class="probability">
+                    {{ result.error if result and result.error else 'Please try again with valid input.' }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">
+                    <span>🔄</span> New Prediction
+                </a>
+                <a href="/dashboard" class="btn btn-info">
+                    <span>📊</span> View Dashboard
+                </a>
+                <a href="/history" class="btn btn-warning">
+                    <span>📜</span> View History
+                </a>
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <span>📄</span> Save as PDF
+                </button>
+                <button onclick="copyResults()" class="btn btn-success">
+                    <span>📋</span> Copy Results
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
+            <p>© 2026 Customer Churn Prediction Project | 
+                <a href="/">Home</a> | 
+                <a href="/dashboard">Dashboard</a> | 
+                <a href="/history">History</a> | 
+                <a href="#" onclick="window.print()">Print</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Share functions
+        function shareOnTwitter() {
+            const text = encodeURIComponent('Check out this customer churn prediction! {{ result.prediction }} with {{ result.confidence }}% confidence.');
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareOnLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('Customer Churn Prediction Results');
+            const summary = encodeURIComponent('{{ result.prediction }} with {{ result.confidence }}% confidence');
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareByEmail() {
+            const subject = encodeURIComponent('Customer Churn Prediction Results');
+            const body = encodeURIComponent(
+`Customer Churn Prediction Results
+------------------------------
+Model Used: {{ result.model_used }}
+Prediction: {{ result.prediction }}
+Confidence: {{ result.confidence }}%
+Churn Probability: {{ result.churn_probability }}%
+
+View the full results at: ${window.location.href}`
+            );
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+        
+        // Copy results to clipboard
+        function copyResults() {
+            const results = `Customer Churn Prediction Results
+------------------------------
+Model Used: {{ result.model_used }}
+Prediction: {{ result.prediction }}
+Confidence: {{ result.confidence }}%
+Churn Probability: {{ result.churn_probability }}%
+
+All Models Comparison:
+{% if result.all_predictions %}
+{% for model_name, pred in result.all_predictions.items() %}
+- {{ model_name }}: {{ pred.prediction }} ({{ pred.confidence }}% confidence, {{ pred.churn_prob }}% churn prob)
+{% endfor %}
+{% endif %}
+
+View online: ${window.location.href}`;
+            
+            navigator.clipboard.writeText(results).then(() => {
+                // Show temporary success message
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy results');
+            });
+        }
+        
+        // Add keyboard shortcut (Ctrl+P to print)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+        
+        // Track share events (optional)
+        function trackShare(platform) {
+            console.log(`Shared on ${platform}`);
+            // You could send this to analytics here
+        }
+        
+        // Add active class to current page link
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentLocation) {
+                    link.style.background = 'rgba(255, 255, 255, 0.3)';
+                    link.style.fontWeight = 'bold';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Dashboard - Churn Predictor</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-card h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid;
+            padding-bottom: 10px;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .accuracy-value {
+            color: #28a745;
+        }
+        
+        .precision-value {
+            color: #17a2b8;
+        }
+        
+        .recall-value {
+            color: #ffc107;
+        }
+        
+        .f1-value {
+            color: #dc3545;
+        }
+        
+        .charts-section {
+            margin: 40px 0;
+        }
+        
+        .charts-section h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+        }
+        
+        .chart-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .feature-importance-section {
+            margin: 40px 0;
+        }
+        
+        .feature-importance-section h2 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        
+        .feature-name {
+            color: #495057;
+            font-size: 0.95em;
+        }
+        
+        .feature-imp {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .segmentation-section {
+            margin: 40px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .segmentation-section h2 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .segmentation-section h2:before {
+            content: "🎯";
+            font-size: 1.2em;
+        }
+        
+        .segmentation-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .segmentation-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .segmentation-text p {
+            color: #6c757d;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .segment-previews {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .segment-preview {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+        
+        .segment-preview.high {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .segment-preview.medium {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        .segment-preview.low {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }
+        
+        .segment-preview .preview-count {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .segment-preview .preview-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .btn-segmentation {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-segmentation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        
+        .footer a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .nav-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .nav-link {
+                justify-content: center;
+            }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .segmentation-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .segment-previews {
+                justify-content: center;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .metric-card {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Model Performance Dashboard</h1>
+            <p>Compare the performance of all three machine learning models</p>
+            
+            <!-- Navigation Bar with What-If and Segmentation Links -->
+            <div class="nav-bar">
+                <a href="/" class="nav-link">
+                    <span>🏠</span> Home
+                </a>
+                <a href="/dashboard" class="nav-link">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="/history" class="nav-link">
+                    <span>📜</span> History
+                </a>
+                <a href="/what-if" class="nav-link">
+                    <span>🎮</span> What-If
+                </a>
+                <a href="/segmentation" class="nav-link">
+                    <span>🎯</span> Segments
+                </a>
+            </div>
+        </div>
+        
+        <div class="content">
+            {% if error %}
+            <div style="background: #fee; color: #dc3545; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                Error: {{ error }}
+            </div>
+            {% endif %}
+            
+            <!-- Model Metrics Cards -->
+            <div class="metrics-grid">
+                {% for model_key, model_metrics in metrics.items() %}
+                <div class="metric-card">
+                    <h3 style="border-bottom-color: {{ model_metrics.color }};">{{ model_metrics.name }}</h3>
+                    
+                    <div class="metric-item">
+                        <span class="metric-label">Accuracy</span>
+                        <span class="metric-value accuracy-value">{{ model_metrics.accuracy }}%</span>
+                    </div>
+                    
+                    <div class="metric-item">
+                        <span class="metric-label">Precision</span>
+                        <span class="metric-value precision-value">{{ model_metrics.precision }}</span>
+                    </div>
+                    
+                    <div class="metric-item">
+                        <span class="metric-label">Recall</span>
+                        <span class="metric-value recall-value">{{ model_metrics.recall }}</span>
+                    </div>
+                    
+                    <div class="metric-item">
+                        <span class="metric-label">F1-Score</span>
+                        <span class="metric-value f1-value">{{ model_metrics.f1 }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Performance Comparison Chart -->
+            <div class="charts-section">
+                <h2>📈 Model Performance Comparison</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>Accuracy Comparison</h3>
+                        <div class="chart-container" id="accuracy-chart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Precision, Recall, F1 Comparison</h3>
+                        <div class="chart-container" id="metrics-chart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feature Importance Section -->
+            <div class="feature-importance-section">
+                <h2>🔍 Top Features by Model</h2>
+                <div class="feature-grid">
+                    {% for model_key, features in feature_importance.items() %}
+                    <div class="feature-card">
+                        <h3 style="border-bottom-color: {{ metrics[model_key].color }};">{{ metrics[model_key].name }}</h3>
+                        <ul class="feature-list">
+                            {% for feature, imp in features.items() %}
+                            <li class="feature-item">
+                                <span class="feature-name">{{ feature[:30] }}{% if feature|length > 30 %}...{% endif %}</span>
+                                <span class="feature-imp">{{ "%.3f"|format(imp) }}</span>
+                            </li>
+                            {% endfor %}
+                            {% if features|length == 0 %}
+                            <li class="feature-item">No feature importance data available</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Customer Segmentation Section -->
+            <div class="segmentation-section">
+                <h2>Customer Segmentation</h2>
+                <div class="segmentation-content">
+                    <div class="segmentation-text">
+                        <p>Group your customers into risk-based segments for targeted retention strategies. Our AI automatically clusters customers based on their behavior and churn risk.</p>
+                        
+                        <div class="segment-previews">
+                            <div class="segment-preview high">
+                                <div class="preview-count">🔥 High Risk</div>
+                                <div class="preview-label">Immediate action needed</div>
+                            </div>
+                            <div class="segment-preview medium">
+                                <div class="preview-count">⚠️ Medium Risk</div>
+                                <div class="preview-label">Monitor closely</div>
+                            </div>
+                            <div class="segment-preview low">
+                                <div class="preview-count">✅ Low Risk</div>
+                                <div class="preview-label">Loyal customers</div>
+                            </div>
+                        </div>
+                        
+                        <a href="/segmentation" class="btn-segmentation">
+                            <span>🎯</span> View Full Segmentation Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">
+                    <span>🔮</span> Make Prediction
+                </a>
+                <a href="/history" class="btn btn-info">
+                    <span>📜</span> View History
+                </a>
+                <a href="/what-if" class="btn btn-success">
+                    <span>🎮</span> What-If Analysis
+                </a>
+                <a href="/segmentation" class="btn btn-warning">
+                    <span>🎯</span> Customer Segments
+                </a>
+                <a href="#" onclick="downloadMetrics()" class="btn btn-secondary">
+                    <span>📥</span> Download Data
+                </a>
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <span>📄</span> Print Dashboard
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
+            <p>© 2026 Customer Churn Prediction Project | 
+                <a href="/">Home</a> | 
+                <a href="/dashboard">Dashboard</a> | 
+                <a href="/history">History</a> | 
+                <a href="/what-if">What-If</a> | 
+                <a href="/segmentation">Segments</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Create accuracy comparison chart
+        var accuracyData = [{
+            x: ['{{ metrics.logistic.name }}', '{{ metrics.tree.name }}', '{{ metrics.forest.name }}'],
+            y: [{{ metrics.logistic.accuracy }}, {{ metrics.tree.accuracy }}, {{ metrics.forest.accuracy }}],
+            type: 'bar',
+            marker: {
+                color: ['{{ metrics.logistic.color }}', '{{ metrics.tree.color }}', '{{ metrics.forest.color }}']
+            },
+            text: [{{ metrics.logistic.accuracy }} + '%', {{ metrics.tree.accuracy }} + '%', {{ metrics.forest.accuracy }} + '%'],
+            textposition: 'outside',
+        }];
+        
+        var accuracyLayout = {
+            title: 'Model Accuracy Comparison',
+            yaxis: {title: 'Accuracy (%)', range: [75, 85]},
+            height: 350,
+            margin: {t: 50, b: 50, l: 50, r: 50},
+            template: 'plotly_white'
+        };
+        
+        Plotly.newPlot('accuracy-chart', accuracyData, accuracyLayout, {responsive: true});
+        
+        // Create metrics comparison chart
+        var metricsData = [
+            {
+                name: 'Precision',
+                x: ['{{ metrics.logistic.name }}', '{{ metrics.tree.name }}', '{{ metrics.forest.name }}'],
+                y: [{{ metrics.logistic.precision }}, {{ metrics.tree.precision }}, {{ metrics.forest.precision }}],
+                type: 'bar',
+                marker: {color: '#17a2b8'}
+            },
+            {
+                name: 'Recall',
+                x: ['{{ metrics.logistic.name }}', '{{ metrics.tree.name }}', '{{ metrics.forest.name }}'],
+                y: [{{ metrics.logistic.recall }}, {{ metrics.tree.recall }}, {{ metrics.forest.recall }}],
+                type: 'bar',
+                marker: {color: '#ffc107'}
+            },
+            {
+                name: 'F1-Score',
+                x: ['{{ metrics.logistic.name }}', '{{ metrics.tree.name }}', '{{ metrics.forest.name }}'],
+                y: [{{ metrics.logistic.f1 }}, {{ metrics.tree.f1 }}, {{ metrics.forest.f1 }}],
+                type: 'bar',
+                marker: {color: '#dc3545'}
+            }
+        ];
+        
+        var metricsLayout = {
+            title: 'Precision, Recall, and F1 Scores',
+            yaxis: {title: 'Score', range: [0, 1]},
+            barmode: 'group',
+            height: 350,
+            margin: {t: 50, b: 50, l: 50, r: 50},
+            template: 'plotly_white'
+        };
+        
+        Plotly.newPlot('metrics-chart', metricsData, metricsLayout, {responsive: true});
+        
+        // Download metrics as CSV
+        function downloadMetrics() {
+            var csv = 'Model,Accuracy,Precision,Recall,F1-Score\n';
+            csv += 'Logistic Regression,{{ metrics.logistic.accuracy }},{{ metrics.logistic.precision }},{{ metrics.logistic.recall }},{{ metrics.logistic.f1 }}\n';
+            csv += 'Decision Tree,{{ metrics.tree.accuracy }},{{ metrics.tree.precision }},{{ metrics.tree.recall }},{{ metrics.tree.f1 }}\n';
+            csv += 'Random Forest,{{ metrics.forest.accuracy }},{{ metrics.forest.precision }},{{ metrics.forest.recall }},{{ metrics.forest.f1 }}\n';
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'model_metrics.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('accuracy-chart');
+            Plotly.Plots.resize('metrics-chart');
+        });
+        
+        // Add active class to current page link
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentLocation) {
+                    link.style.background = 'rgba(255, 255, 255, 0.3)';
+                    link.style.fontWeight = 'bold';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
