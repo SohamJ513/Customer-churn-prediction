@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feature Importance - {{ model_info.name }}</title>
+    <title>Feature Importance - {{ model_info.name }} | ChurnPredict</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         * {
@@ -13,142 +13,331 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 24px;
         }
         
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header h1::before {
+            content: "🔍";
+            font-size: 1.5rem;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
+            color: var(--secondary);
+            font-size: 0.875rem;
         }
         
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .nav-link {
+            color: var(--secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        
+        /* Content */
         .content {
-            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
         }
         
+        /* Model Badge */
         .model-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 24px;
             color: white;
-            background: {{ model_info.color }};
         }
         
+        /* Chart Container */
         .chart-container {
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: var(--light);
+            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 32px;
+            border: 1px solid var(--border);
         }
         
+        .chart-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Insights Section */
         .insights-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
         
         .insights-section h3 {
-            color: #495057;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 20px;
-            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .insights-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
         
         .insight-card {
-            background: white;
+            background: var(--light);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid {{ model_info.color }};
+            border-radius: 12px;
+            border-left: 3px solid;
+            transition: all 0.2s;
+        }
+        
+        .insight-card:hover {
+            transform: translateX(4px);
         }
         
         .insight-card h4 {
-            color: {{ model_info.color }};
-            margin-bottom: 10px;
-            font-size: 1.2em;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .insight-card p {
-            color: #6c757d;
-            line-height: 1.6;
+            font-size: 0.813rem;
+            color: var(--secondary);
+            line-height: 1.5;
         }
         
+        /* Top Features Table */
+        .top-features-section {
+            margin-bottom: 32px;
+        }
+        
+        .top-features-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+        
+        .features-table {
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .feature-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+        
+        .feature-row:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-row:hover {
+            background: white;
+        }
+        
+        .feature-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .feature-importance {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+        }
+        
+        .importance-bar {
+            width: 120px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .importance-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        .importance-value {
+            font-size: 0.813rem;
+            font-weight: 600;
+            min-width: 45px;
+        }
+        
+        /* Action Buttons */
         .action-buttons {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 30px;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
         }
         
         .btn {
-            padding: 12px 30px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
             text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--dark);
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary);
+            border-color: var(--primary);
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
-            background: #6c757d;
-            color: white;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--dark);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
         
+        /* Footer */
         .footer {
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
             padding: 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
+            text-align: center;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.75rem;
         }
         
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
             }
             
             .action-buttons {
@@ -156,96 +345,249 @@
             }
             
             .btn {
-                text-align: center;
+                width: 100%;
+                justify-content: center;
             }
+            
+            .feature-importance {
+                min-width: 140px;
+            }
+            
+            .importance-bar {
+                width: 80px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .content,
+        .chart-container,
+        .insight-card,
+        .features-table {
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🔍 Feature Importance Analysis</h1>
-            <p>Understanding what drives {{ model_info.name }} predictions</p>
+            <h1>Feature Importance Analysis</h1>
+            <p>Understanding what drives {{ model_info.name }} predictions and customer churn</p>
+            
+            <div class="nav-bar">
+                <a href="/" class="nav-link">🏠 Overview</a>
+                <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+                <a href="/history" class="nav-link">📜 History</a>
+                <a href="/what-if" class="nav-link">🎯 What-If</a>
+                <a href="/segmentation" class="nav-link">👥 Segments</a>
+            </div>
         </div>
         
+        <!-- Content -->
         <div class="content">
+            <!-- Model Badge -->
             <div class="model-badge" style="background: {{ model_info.color }};">
-                {{ model_info.name }} ({{ model_info.accuracy }}% accuracy)
+                🔬 {{ model_info.name }} · {{ model_info.accuracy }}% accuracy
             </div>
             
+            <!-- Chart -->
             <div class="chart-container">
+                <div class="chart-title">Feature Impact Analysis</div>
                 <div id="importance-chart"></div>
             </div>
             
+            <!-- Key Insights -->
             <div class="insights-section">
-                <h3>💡 Key Insights</h3>
+                <h3>
+                    <span>💡</span> Key Business Insights
+                </h3>
                 <div class="insights-grid">
-                    <div class="insight-card">
-                        <h4>📊 Most Important Feature</h4>
-                        <p>The model relies heavily on contract type and tenure to make predictions. Customers with longer commitments are much less likely to churn.</p>
+                    <div class="insight-card" style="border-left-color: var(--primary);">
+                        <h4>📊 Primary Churn Driver</h4>
+                        <p>Contract type and tenure are the strongest predictors. Customers on month-to-month contracts are significantly more likely to churn.</p>
                     </div>
                     
-                    <div class="insight-card">
-                        <h4>💰 Payment Methods Matter</h4>
-                        <p>Electronic check users show higher churn probability. Consider promoting automatic payment methods to reduce risk.</p>
+                    <div class="insight-card" style="border-left-color: var(--warning);">
+                        <h4>💰 Payment Method Impact</h4>
+                        <p>Electronic check users show 2x higher churn risk. Consider incentives for automatic payment enrollment.</p>
                     </div>
                     
-                    <div class="insight-card">
-                        <h4>📱 Service Impact</h4>
-                        <p>Customers with fiber optic internet and no tech support are at higher risk. Bundle support with internet packages.</p>
+                    <div class="insight-card" style="border-left-color: var(--info);">
+                        <h4>📱 Service Bundles</h4>
+                        <p>Fiber optic customers without tech support or online security are high-risk. Bundle these services for better retention.</p>
                     </div>
                     
-                    <div class="insight-card">
-                        <h4>⏱️ Tenure Factor</h4>
-                        <p>New customers (less than 12 months) need extra attention. Implement onboarding programs for first-year customers.</p>
+                    <div class="insight-card" style="border-left-color: var(--success);">
+                        <h4>⏱️ Tenure Effects</h4>
+                        <p>First 12 months are critical. Implement onboarding programs and early engagement initiatives for new customers.</p>
                     </div>
                 </div>
             </div>
             
+            <!-- Top Features Table -->
+            <div class="top-features-section">
+                <h3>📋 Feature Importance Rankings</h3>
+                <div class="features-table" id="features-table">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
             <div class="action-buttons">
-                <a href="/" class="btn btn-primary">🔮 Make Prediction</a>
-                <a href="/dashboard" class="btn btn-secondary">📊 View Dashboard</a>
-                <button onclick="downloadData()" class="btn btn-secondary">📥 Download Data</button>
+                <a href="/" class="btn btn-primary">
+                    🔮 Make Prediction
+                </a>
+                <a href="/dashboard" class="btn btn-secondary">
+                    📊 View Dashboard
+                </a>
+                <button onclick="downloadData()" class="btn btn-secondary">
+                    📥 Export Data (CSV)
+                </button>
             </div>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
-            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
-            <p>© 2026 Customer Churn Prediction Project</p>
+            <p>Customer Churn Prediction System | Powered by Machine Learning</p>
+            <p>
+                <a href="/">Overview</a> •
+                <a href="/dashboard">Dashboard</a> •
+                <a href="/history">History</a> •
+                <a href="/what-if">What-If</a> •
+                <a href="/segmentation">Segments</a>
+            </p>
         </div>
     </div>
     
     <script>
+        // Calculate max importance for bar scaling
+        let maxImportance = 0;
+        
         // Render the plotly chart
         var graphJSON = {{ graphJSON | safe }};
+        
+        // Customize chart layout for professional look
+        graphJSON.layout = {
+            title: '',
+            xaxis: {
+                title: 'Importance Score',
+                gridcolor: '#e2e8f0',
+                zerolinecolor: '#e2e8f0',
+                showline: true,
+                linecolor: '#e2e8f0'
+            },
+            yaxis: {
+                title: '',
+                gridcolor: '#e2e8f0',
+                zerolinecolor: '#e2e8f0',
+                automargin: true
+            },
+            height: 500,
+            margin: { t: 20, l: 150, r: 30, b: 50 },
+            plot_bgcolor: '#f8fafc',
+            paper_bgcolor: '#f8fafc',
+            font: {
+                family: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto',
+                size: 11,
+                color: '#1e293b'
+            },
+            showlegend: false
+        };
+        
+        // Update bar colors to match model
+        if (graphJSON.data && graphJSON.data[0]) {
+            graphJSON.data[0].marker = {
+                color: '{{ model_info.color }}',
+                cornerradius: 4
+            };
+            graphJSON.data[0].textposition = 'outside';
+            graphJSON.data[0].textfont = { size: 10 };
+            
+            // Calculate max importance
+            if (graphJSON.data[0].x) {
+                maxImportance = Math.max(...graphJSON.data[0].x);
+            }
+        }
+        
         Plotly.newPlot('importance-chart', graphJSON.data, graphJSON.layout, {
             responsive: true,
-            displaylogo: false
+            displayModeBar: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
         });
+        
+        // Populate features table from chart data
+        function populateFeaturesTable() {
+            const container = document.getElementById('features-table');
+            if (!container || !graphJSON.data || !graphJSON.data[0]) return;
+            
+            const features = graphJSON.data[0].y || [];
+            const importance = graphJSON.data[0].x || [];
+            
+            if (features.length === 0) return;
+            
+            let html = '';
+            for (let i = 0; i < features.length; i++) {
+                const percent = ((importance[i] / maxImportance) * 100).toFixed(1);
+                html += `
+                    <div class="feature-row">
+                        <span class="feature-name">${features[i]}</span>
+                        <div class="feature-importance">
+                            <div class="importance-bar">
+                                <div class="importance-fill" style="width: ${percent}%; background: {{ model_info.color }};"></div>
+                            </div>
+                            <span class="importance-value">${importance[i].toFixed(3)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
         
         // Handle window resize
         window.addEventListener('resize', function() {
             Plotly.Plots.resize('importance-chart');
         });
         
+        // Populate table after chart renders
+        setTimeout(populateFeaturesTable, 100);
+        
         // Download feature importance data
-        function downloadData() {
-            fetch(`/api/feature_importance/{{ model_name }}`)
-                .then(response => response.json())
-                .then(data => {
-                    let csv = 'Feature,Importance\n';
-                    for (let i = 0; i < data.features.length; i++) {
-                        csv += `${data.features[i]},${data.importance[i]}\n`;
-                    }
-                    
-                    const blob = new Blob([csv], { type: 'text/csv' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'feature_importance.csv';
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                });
+        async function downloadData() {
+            try {
+                const response = await fetch(`/api/feature_importance/{{ model_name }}`);
+                const data = await response.json();
+                
+                let csv = 'Feature,Importance\n';
+                for (let i = 0; i < data.features.length; i++) {
+                    csv += `"${data.features[i]}",${data.importance[i]}\n`;
+                }
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `feature_importance_{{ model_name }}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error downloading data:', error);
+                alert('Unable to download data. Please try again.');
+            }
         }
     </script>
 </body>

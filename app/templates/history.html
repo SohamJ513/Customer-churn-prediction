@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction History - Churn Predictor</title>
+    <title>Prediction History | ChurnPredict</title>
     <style>
         * {
             margin: 0;
@@ -12,421 +12,471 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1440px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 24px;
         }
         
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header h1::before {
+            content: "📜";
+            font-size: 1.5rem;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+            color: var(--secondary);
+            font-size: 0.875rem;
         }
         
+        /* Navigation */
         .nav-bar {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
         }
         
         .nav-link {
-            color: white;
+            color: var(--secondary);
             text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: bold;
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
-        .content {
-            padding: 30px;
-        }
-        
-        .stats-bar {
-            display: flex;
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            margin-bottom: 24px;
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: var(--card-bg);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 10px;
-            flex: 1;
-            min-width: 150px;
-            text-align: center;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
         .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
         }
         
         .stat-label {
-            color: #6c757d;
-            margin-top: 5px;
-            font-weight: 500;
-        }
-        
-        .action-bar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        .btn-warning {
-            background: #ffc107;
-            color: #212529;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .history-table th {
-            background: #f8f9fa;
-            padding: 15px;
-            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
+            color: var(--secondary);
         }
         
-        .history-table td {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            color: #495057;
-        }
-        
-        .history-table tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .prediction-badge {
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 0.9em;
-            display: inline-block;
-        }
-        
-        .badge-churn {
-            background: #fee;
-            color: #dc3545;
-        }
-        
-        .badge-stay {
-            background: #efe;
-            color: #28a745;
-        }
-        
-        .segment-badge {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-left: 8px;
-            display: inline-block;
-        }
-        
-        .segment-high {
-            background: #fee;
-            color: #dc3545;
-            border: 1px solid #dc3545;
-        }
-        
-        .segment-medium {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffc107;
-        }
-        
-        .segment-low {
-            background: #d4edda;
-            color: #28a745;
-            border: 1px solid #28a745;
-        }
-        
-        .model-tag {
-            padding: 3px 10px;
-            border-radius: 5px;
-            font-size: 0.85em;
-            color: white;
-            display: inline-block;
-        }
-        
-        .model-logistic { background: #3498db; }
-        .model-tree { background: #f39c12; }
-        .model-forest { background: #2ecc71; }
-        
-        .features-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            max-width: 300px;
-        }
-        
-        .feature-tag {
-            background: #e9ecef;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            color: #495057;
-        }
-        
-        .btn-view {
-            background: #667eea;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9em;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .btn-view:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-        }
-        
+        /* Segmentation Banner */
         .segmentation-prompt {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 20px;
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--border);
         }
         
         .segmentation-prompt-text {
             flex: 1;
-            min-width: 250px;
         }
         
         .segmentation-prompt-text h3 {
-            color: #495057;
-            margin-bottom: 5px;
-            font-size: 1.3em;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
         .segmentation-prompt-text p {
-            color: #6c757d;
-            font-size: 0.95em;
+            font-size: 0.813rem;
+            color: var(--secondary);
         }
         
         .segment-tags-preview {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
         }
         
         .segment-tag-sample {
-            padding: 5px 12px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: bold;
+            font-size: 0.688rem;
+            font-weight: 600;
+        }
+        
+        .segment-tag-sample.high {
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
+        }
+        
+        .segment-tag-sample.medium {
+            background: #fffbeb;
+            color: var(--warning);
+            border: 1px solid #fde68a;
+        }
+        
+        .segment-tag-sample.low {
+            background: #f0fdf4;
+            color: var(--success);
+            border: 1px solid #bbf7d0;
         }
         
         .btn-segmentation {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 0.813rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
         .btn-segmentation:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
         
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.813rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--dark);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-info {
+            background: var(--info);
+            border-color: var(--info);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+        
+        /* History Table */
+        .history-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.813rem;
+        }
+        
+        .history-table th {
+            text-align: left;
+            padding: 16px;
+            background: #f8fafc;
+            color: var(--secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .history-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+        }
+        
+        .history-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Badges */
+        .prediction-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-churn {
+            background: #fef2f2;
+            color: var(--danger);
+        }
+        
+        .badge-stay {
+            background: #f0fdf4;
+            color: var(--success);
+        }
+        
+        .model-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.688rem;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .model-logistic { background: var(--info); }
+        .model-tree { background: var(--warning); color: var(--dark); }
+        .model-forest { background: var(--success); }
+        
+        .segment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.688rem;
+            font-weight: 600;
+        }
+        
+        .segment-high {
+            background: #fef2f2;
+            color: var(--danger);
+        }
+        
+        .segment-medium {
+            background: #fffbeb;
+            color: var(--warning);
+        }
+        
+        .segment-low {
+            background: #f0fdf4;
+            color: var(--success);
+        }
+        
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: 280px;
+        }
+        
+        .feature-tag {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.688rem;
+            color: var(--secondary);
+        }
+        
+        .btn-view {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+        
+        .btn-view:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #6c757d;
         }
         
         .empty-state h3 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
         }
         
         .empty-state p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
+            font-size: 0.875rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
         }
         
+        /* Footer */
         .footer {
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
             padding: 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
+            margin-top: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.75rem;
         }
         
         .footer a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
-            margin: 0 5px;
+            margin: 0 8px;
         }
         
         .footer a:hover {
             text-decoration: underline;
         }
         
-        .pagination {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        
-        .page-btn {
-            padding: 8px 15px;
-            border: 1px solid #dee2e6;
-            background: white;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .page-btn:hover {
-            background: #e9ecef;
-        }
-        
-        .page-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-        
+        /* Toast */
         .toast-message {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #28a745;
+            bottom: 24px;
+            right: 24px;
+            background: var(--success);
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.813rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
             animation: slideIn 0.3s ease-out;
             z-index: 1000;
+        }
+        
+        .toast-message.error {
+            background: var(--danger);
         }
         
         @keyframes slideIn {
@@ -440,40 +490,41 @@
             }
         }
         
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
+            .container {
+                padding: 16px;
             }
             
             .header {
-                padding-top: 20px;
+                padding: 20px;
             }
             
-            .nav-bar {
-                flex-direction: column;
-                align-items: stretch;
+            .header h1 {
+                font-size: 1.5rem;
             }
             
-            .nav-link {
-                justify-content: center;
-            }
-            
-            .history-table {
-                display: block;
-                overflow-x: auto;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
             
             .action-bar {
                 flex-direction: column;
+                align-items: stretch;
             }
             
-            .btn {
-                width: 100%;
+            .action-group {
                 justify-content: center;
             }
             
-            .features-list {
-                max-width: 200px;
+            .btn {
+                justify-content: center;
             }
             
             .segmentation-prompt {
@@ -484,200 +535,197 @@
             .segment-tags-preview {
                 justify-content: center;
             }
+            
+            .history-table th,
+            .history-table td {
+                padding: 10px 12px;
+            }
+            
+            .features-list {
+                max-width: 180px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stat-card,
+        .segmentation-prompt,
+        .history-container {
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>📜 Prediction History</h1>
-            <p>Recent customer churn predictions</p>
+            <h1>Prediction History</h1>
+            <p>Track and analyze all customer churn predictions</p>
             
-            <!-- Navigation Bar with Segmentation Link -->
             <div class="nav-bar">
-                <a href="/" class="nav-link">
-                    <span>🏠</span> Home
-                </a>
-                <a href="/dashboard" class="nav-link">
-                    <span>📊</span> Dashboard
-                </a>
-                <a href="/history" class="nav-link active">
-                    <span>📜</span> History
-                </a>
-                <a href="/what-if" class="nav-link">
-                    <span>🎮</span> What-If
-                </a>
-                <a href="/segmentation" class="nav-link">
-                    <span>🎯</span> Segments
-                </a>
+                <a href="/" class="nav-link">🏠 Overview</a>
+                <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+                <a href="/history" class="nav-link active">📜 History</a>
+                <a href="/what-if" class="nav-link">🎯 What-If</a>
+                <a href="/segmentation" class="nav-link">👥 Segments</a>
             </div>
         </div>
         
-        <div class="content">
-            <!-- Stats Bar -->
-            <div class="stats-bar">
-                <div class="stat-card">
-                    <div class="stat-value">{{ predictions|length }}</div>
-                    <div class="stat-label">Total Predictions</div>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ predictions|length }}</div>
+                <div class="stat-label">Total Predictions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">
+                    {% set churn_count = predictions|selectattr('prediction', 'equalto', 'CHURN')|list|length %}
+                    {{ churn_count }}
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">
-                        {% set churn_count = predictions|selectattr('prediction', 'equalto', 'CHURN')|list|length %}
-                        {{ churn_count }}
-                    </div>
-                    <div class="stat-label">Churn Predictions</div>
+                <div class="stat-label">Churn Predictions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">
+                    {% set stay_count = predictions|selectattr('prediction', 'equalto', 'STAY')|list|length %}
+                    {{ stay_count }}
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">
-                        {% set stay_count = predictions|selectattr('prediction', 'equalto', 'STAY')|list|length %}
-                        {{ stay_count }}
-                    </div>
-                    <div class="stat-label">Stay Predictions</div>
+                <div class="stat-label">Stay Predictions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">
+                    {% if predictions %}
+                        {{ "%.1f"|format(predictions|map(attribute='confidence')|sum / predictions|length) }}%
+                    {% else %}
+                        0%
+                    {% endif %}
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">
-                        {% if predictions %}
-                            {{ "%.1f"|format(predictions|map(attribute='confidence')|sum / predictions|length) }}%
-                        {% else %}
-                            0%
-                        {% endif %}
-                    </div>
-                    <div class="stat-label">Avg Confidence</div>
+                <div class="stat-label">Avg Confidence</div>
+            </div>
+        </div>
+        
+        <!-- Segmentation Prompt (appears after 5+ predictions) -->
+        {% if predictions|length >= 5 %}
+        <div class="segmentation-prompt">
+            <div class="segmentation-prompt-text">
+                <h3>
+                    <span>🎯</span> Customer Segmentation Ready
+                </h3>
+                <p>Based on {{ predictions|length }} predictions, view risk-based customer segments with retention recommendations</p>
+                <div class="segment-tags-preview">
+                    <span class="segment-tag-sample high">High Risk</span>
+                    <span class="segment-tag-sample medium">Medium Risk</span>
+                    <span class="segment-tag-sample low">Low Risk</span>
                 </div>
             </div>
-            
-            <!-- Segmentation Prompt -->
-            {% if predictions|length >= 5 %}
-            <div class="segmentation-prompt">
-                <div class="segmentation-prompt-text">
-                    <h3>
-                        <span>🎯</span> Customer Segmentation Available
-                    </h3>
-                    <p>Based on your {{ predictions|length }} predictions, we've identified customer segments with different risk levels.</p>
-                    <div class="segment-tags-preview">
-                        <span class="segment-tag-sample segment-high">🔥 High Risk</span>
-                        <span class="segment-tag-sample segment-medium">⚠️ Medium Risk</span>
-                        <span class="segment-tag-sample segment-low">✅ Low Risk</span>
-                    </div>
-                </div>
-                <a href="/segmentation" class="btn-segmentation">
-                    <span>🎯</span> View Segments
-                </a>
+            <a href="/segmentation" class="btn-segmentation">
+                View Segments →
+            </a>
+        </div>
+        {% endif %}
+        
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-group">
+                <a href="/" class="btn btn-primary">🔮 New Prediction</a>
+                <a href="/dashboard" class="btn btn-info">📊 Dashboard</a>
+                <a href="/what-if" class="btn btn-warning">🎯 What-If</a>
             </div>
-            {% endif %}
-            
-            <!-- Action Bar -->
-            <div class="action-bar">
-                <div>
-                    <a href="/" class="btn btn-primary">
-                        <span>🔮</span> New Prediction
-                    </a>
-                    <a href="/dashboard" class="btn btn-info">
-                        <span>📊</span> Dashboard
-                    </a>
-                    <a href="/what-if" class="btn btn-warning">
-                        <span>🎮</span> What-If
-                    </a>
-                </div>
-                <div>
-                    <button onclick="exportHistory()" class="btn btn-success">
-                        <span>📥</span> Export CSV
-                    </button>
-                    <button onclick="clearHistory()" class="btn btn-danger">
-                        <span>🗑️</span> Clear History
-                    </button>
-                </div>
+            <div class="action-group">
+                <button onclick="exportHistory()" class="btn btn-success">📥 Export CSV</button>
+                <button onclick="clearHistory()" class="btn btn-danger">🗑️ Clear All</button>
             </div>
-            
-            <!-- History Table -->
+        </div>
+        
+        <!-- History Table -->
+        <div class="history-container">
             {% if predictions %}
-            <table class="history-table" id="historyTable">
+            <table class="history-table">
                 <thead>
                     <tr>
-                        <th>Time</th>
+                        <th>Date & Time</th>
                         <th>Model</th>
                         <th>Prediction</th>
-                        <th>Segment</th>
+                        <th>Risk Level</th>
                         <th>Confidence</th>
-                        <th>Key Features</th>
+                        <th>Key Factors</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for pred in predictions %}
-                    {% set segment_risk = 'High' if pred.prediction == 'CHURN' else 'Low' %}
                     <tr>
                         <td>{{ pred.timestamp }}</td>
                         <td>
                             <span class="model-tag model-{{ pred.model_key }}">
+                                {% if pred.model_key == 'logistic' %}📐 LR
+                                {% elif pred.model_key == 'tree' %}🌳 DT
+                                {% else %}🌲 RF{% endif %}
                                 {{ pred.model }}
                             </span>
                         </td>
                         <td>
                             <span class="prediction-badge {% if pred.prediction == 'CHURN' %}badge-churn{% else %}badge-stay{% endif %}">
-                                {{ pred.prediction }}
+                                {% if pred.prediction == 'CHURN' %}⚠️ Churn{% else %}✅ Stay{% endif %}
                             </span>
                         </td>
                         <td>
-                            <span class="segment-badge segment-{{ segment_risk|lower }}">
-                                {% if segment_risk == 'High' %}🔥 High Risk
-                                {% elif segment_risk == 'Medium' %}⚠️ Medium Risk
-                                {% else %}✅ Low Risk{% endif %}
+                            <span class="segment-badge segment-{% if pred.prediction == 'CHURN' %}high{% else %}low{% endif %}">
+                                {% if pred.prediction == 'CHURN' %}🔥 High Risk{% else %}✅ Low Risk{% endif %}
                             </span>
                         </td>
                         <td>{{ pred.confidence }}%</td>
                         <td>
                             <div class="features-list">
-                                {% for feature in pred.features %}
-                                <span class="feature-tag">{{ feature }}</span>
+                                {% for feature in pred.features[:3] %}
+                                <span class="feature-tag">{{ feature[:20] }}{% if feature|length > 20 %}...{% endif %}</span>
                                 {% endfor %}
+                                {% if pred.features|length > 3 %}
+                                <span class="feature-tag">+{{ pred.features|length - 3 }} more</span>
+                                {% endif %}
                             </div>
                         </td>
                         <td>
                             <a href="/history/{{ pred.id }}" class="btn-view">
-                                <span>🔍</span> Details
+                                Details →
                             </a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            
-            <!-- Pagination (simplified) -->
-            {% if predictions|length > 10 %}
-            <div class="pagination">
-                <button class="page-btn" onclick="changePage(-1)">←</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn" onclick="changePage(1)">→</button>
-            </div>
-            {% endif %}
-            
             {% else %}
             <div class="empty-state">
                 <h3>📭 No Predictions Yet</h3>
-                <p>Make your first prediction to see it appear here!</p>
-                <a href="/" class="btn btn-primary">
-                    <span>🔮</span> Make a Prediction
-                </a>
+                <p>Make your first prediction to start building history</p>
+                <a href="/" class="btn btn-primary">Make a Prediction →</a>
             </div>
             {% endif %}
         </div>
         
+        <!-- Footer -->
         <div class="footer">
-            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
-            <p>© 2026 Customer Churn Prediction Project | 
-                <a href="/">Home</a> | 
-                <a href="/dashboard">Dashboard</a> | 
-                <a href="/history">History</a> | 
-                <a href="/what-if">What-If</a> | 
+            <p>Customer Churn Prediction System | Powered by Machine Learning</p>
+            <p>
+                <a href="/">Overview</a> •
+                <a href="/dashboard">Dashboard</a> •
+                <a href="/history">History</a> •
+                <a href="/what-if">What-If</a> •
                 <a href="/segmentation">Segments</a>
             </p>
         </div>
     </div>
     
-    <!-- Toast message for notifications -->
+    <!-- Toast Message -->
     <div id="toast" class="toast-message"></div>
     
     <script>
@@ -686,99 +734,70 @@
             const predictions = {{ predictions|tojson }};
             
             if (predictions.length === 0) {
-                showToast('No predictions to export', 'warning');
+                showToast('No predictions to export', 'error');
                 return;
             }
             
             // Create CSV header
-            let csv = 'Timestamp,Model,Prediction,Segment,Confidence,Churn Probability,Features\n';
+            let csv = 'ID,Timestamp,Model,Prediction,Risk Level,Confidence (%),Churn Probability (%),Key Features\n';
             
             // Add rows
             predictions.forEach(p => {
                 const features = p.features ? p.features.join('; ') : '';
-                const segment = p.prediction === 'CHURN' ? 'High Risk' : 'Low Risk';
-                csv += `"${p.timestamp}",${p.model},${p.prediction},${segment},${p.confidence},${p.churn_prob || 0},"${features}"\n`;
+                const riskLevel = p.prediction === 'CHURN' ? 'High Risk' : 'Low Risk';
+                csv += `"${p.id}","${p.timestamp}",${p.model},${p.prediction},${riskLevel},${p.confidence},${p.churn_prob || 0},"${features}"\n`;
             });
             
             // Download CSV
-            const blob = new Blob([csv], { type: 'text/csv' });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `churn_predictions_${new Date().toISOString().slice(0,10)}.csv`;
+            a.download = `churn_predictions_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
             showToast('History exported successfully!', 'success');
         }
         
-        // Clear history
+        // Clear all history
         function clearHistory() {
-            if (confirm('⚠️ Are you sure you want to clear all prediction history? This action cannot be undone.')) {
+            if (confirm('⚠️ Are you sure you want to clear ALL prediction history?\n\nThis action cannot be undone.')) {
                 fetch('/history/clear', { method: 'POST' })
                     .then(response => response.json())
                     .then(data => {
-                        showToast(data.message, 'success');
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
+                        if (data.success) {
+                            showToast(data.message || 'History cleared successfully!', 'success');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            showToast(data.message || 'Error clearing history', 'error');
+                        }
                     })
                     .catch(error => {
+                        console.error('Error:', error);
                         showToast('Error clearing history', 'error');
                     });
             }
         }
         
-        // Show toast message
+        // Show toast notification
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
+            toast.className = 'toast-message';
+            if (type === 'error') {
+                toast.classList.add('error');
+            }
             toast.style.display = 'block';
-            toast.style.background = type === 'success' ? '#28a745' : '#dc3545';
             
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
         }
-        
-        // Pagination (simplified - can be expanded)
-        function changePage(direction) {
-            const currentPage = document.querySelector('.page-btn.active');
-            if (!currentPage) return;
-            
-            let currentPageNum = parseInt(currentPage.textContent);
-            let newPageNum = currentPageNum + direction;
-            
-            const allPages = document.querySelectorAll('.page-btn:not(:first-child):not(:last-child)');
-            const maxPage = allPages.length;
-            
-            if (newPageNum >= 1 && newPageNum <= maxPage) {
-                // Update active class
-                allPages.forEach(btn => {
-                    if (parseInt(btn.textContent) === newPageNum) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // Here you would implement actual pagination logic
-                console.log('Navigate to page', newPageNum);
-            }
-        }
-        
-        // Add active class to current page link
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentLocation = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentLocation) {
-                    link.style.background = 'rgba(255, 255, 255, 0.3)';
-                    link.style.fontWeight = 'bold';
-                }
-            });
-        });
     </script>
 </body>
 </html>

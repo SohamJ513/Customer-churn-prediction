@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChurnPredict - ML-Powered Customer Churn Analysis</title>
+    <title>ChurnPredict | Enterprise Churn Intelligence Platform</title>
     <style>
         * {
             margin: 0;
@@ -12,366 +12,560 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            line-height: 1.5;
+            background: #ffffff;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
         }
 
         /* Navigation */
         .navbar {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            padding: 0 24px;
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
+            padding: 16px 0;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 24px;
+            align-items: center;
         }
 
         .nav-links a {
-            color: white;
+            color: var(--secondary);
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 50px;
-            transition: all 0.3s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
+            color: var(--primary);
         }
 
         .nav-links .launch-btn {
-            background: white;
-            color: #667eea;
-            font-weight: 600;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
         .nav-links .launch-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 20px 40px;
+            padding: 120px 24px 80px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
         }
 
         .hero-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 60px;
             align-items: center;
         }
 
         .hero-content {
-            color: white;
+            animation: fadeInUp 0.5s ease-out;
         }
 
         .hero-badge {
-            background: rgba(255, 255, 255, 0.2);
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            backdrop-filter: blur(5px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 24px;
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 20px;
             line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
         }
 
         .hero-title span {
-            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
         }
 
         .hero-description {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-bottom: 32px;
             line-height: 1.6;
         }
 
         .hero-stats {
             display: flex;
-            gap: 30px;
+            gap: 32px;
             margin-bottom: 40px;
         }
 
         .stat {
-            text-align: center;
+            text-align: left;
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
         }
 
         .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 0.75rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
 
         .btn {
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 600;
-            transition: all 0.3s;
+            text-decoration: none;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            cursor: pointer;
         }
 
         .btn-primary {
-            background: white;
-            color: #667eea;
+            background: var(--primary);
+            color: white;
         }
 
         .btn-primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
             transform: translateY(-2px);
         }
 
+        /* Hero Image - Dashboard Mockup */
         .hero-image {
             position: relative;
+            animation: fadeInUp 0.5s ease-out 0.1s both;
         }
 
-        .hero-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .floating-card {
-            position: absolute;
+        .dashboard-mockup {
             background: white;
-            padding: 15px 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+        }
+
+        .mockup-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px 20px;
+            color: white;
+        }
+
+        .mockup-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mockup-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .mockup-icons {
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .mockup-body {
+            padding: 20px;
+        }
+
+        /* Metrics Grid */
+        .mockup-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            padding: 12px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .metric-card.blue { background: #eff6ff; }
+        .metric-card.green { background: #f0fdf4; }
+        .metric-card.red { background: #fef2f2; }
+
+        .metric-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .metric-card.blue .metric-value { color: #2563eb; }
+        .metric-card.green .metric-value { color: #10b981; }
+        .metric-card.red .metric-value { color: #ef4444; }
+
+        /* Prediction Card */
+        .mockup-prediction {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 16px;
+            border-left: 3px solid;
+        }
+
+        .mockup-prediction.low-risk {
+            border-left-color: #10b981;
+        }
+
+        .prediction-label {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .prediction-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .low-risk .prediction-value {
+            color: #10b981;
+        }
+
+        .confidence-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin: 8px 0 6px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .low-risk .confidence-fill {
+            background: #10b981;
+            width: 25%;
+        }
+
+        .confidence-text {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        /* Model Tags */
+        .mockup-models {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .model-tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .model-tag.lr { background: #eff6ff; color: #2563eb; }
+        .model-tag.dt { background: #fef3c7; color: #d97706; }
+        .model-tag.rf { background: #f0fdf4; color: #10b981; }
+
+        /* Floating Badge */
+        .floating-badge {
+            position: absolute;
+            bottom: -15px;
+            right: -15px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: float 3s ease-in-out infinite;
         }
 
-        .card-1 {
-            top: -20px;
-            left: -20px;
-            animation-delay: 0s;
+        .floating-icon {
+            font-size: 24px;
         }
 
-        .card-2 {
-            bottom: -20px;
-            right: -20px;
-            animation-delay: 1.5s;
+        .floating-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark);
         }
 
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .card-text {
-            color: #333;
-        }
-
-        .card-text h4 {
-            font-size: 1rem;
-            margin-bottom: 2px;
-        }
-
-        .card-text p {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .floating-subtitle {
+            font-size: 10px;
+            color: #64748b;
         }
 
         /* Features Section */
         .features {
-            padding: 80px 20px;
+            padding: 80px 24px;
             background: white;
         }
 
         .features-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 48px;
         }
 
         .section-title h2 {
-            font-size: 2.5rem;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
         }
 
         .section-title p {
-            color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            color: var(--secondary);
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
         .feature-card {
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-            text-align: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.2s;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
         }
 
         .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: #eff6ff;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
         }
 
         .feature-card p {
-            color: #666;
-            line-height: 1.6;
+            font-size: 0.875rem;
+            color: var(--secondary);
+            line-height: 1.5;
         }
 
         /* How It Works */
         .how-it-works {
-            padding: 80px 20px;
-            background: #f8f9fa;
+            padding: 80px 24px;
+            background: var(--light);
         }
 
         .steps-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
 
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 50px;
+            gap: 32px;
+            margin-top: 48px;
         }
 
         .step {
             text-align: center;
-            position: relative;
         }
 
         .step-number {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
             color: white;
-            border-radius: 50%;
+            border-radius: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
             margin: 0 auto 20px;
         }
 
         .step h3 {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
         }
 
         .step p {
-            color: #666;
-            line-height: 1.6;
+            font-size: 0.875rem;
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+
+        /* Models Section */
+        .models-showcase {
+            padding: 80px 24px;
+            background: white;
+        }
+
+        .models-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .model-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .model-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .model-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .model-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .model-accuracy {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .model-desc {
+            font-size: 0.75rem;
+            color: var(--secondary);
         }
 
         /* CTA Section */
         .cta {
-            padding: 80px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 80px 24px;
+            background: var(--primary);
             text-align: center;
         }
 
@@ -381,56 +575,106 @@
         }
 
         .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
         }
 
         .cta p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             justify-content: center;
         }
 
         .cta .btn-primary {
             background: white;
-            color: #667eea;
+            color: var(--primary);
+        }
+
+        .cta .btn-primary:hover {
+            background: var(--light);
         }
 
         .cta .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
+        .cta .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         /* Footer */
         .footer {
-            background: #2d3748;
+            background: var(--dark);
             color: white;
-            padding: 40px 20px;
+            padding: 48px 24px 32px;
             text-align: center;
         }
 
-        .footer a {
-            color: #a0aec0;
-            text-decoration: none;
-            margin: 0 10px;
-            transition: color 0.3s;
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
         }
 
-        .footer a:hover {
+        .footer p {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
             color: white;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid,
+            .models-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .hero-container {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 40px;
             }
 
             .hero-stats {
@@ -441,21 +685,60 @@
                 justify-content: center;
             }
 
+            .features-grid,
+            .models-grid,
             .steps-grid {
                 grid-template-columns: 1fr;
             }
 
             .nav-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 12px;
             }
 
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
-            .floating-card {
-                display: none;
+            .section-title h2 {
+                font-size: 1.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta .btn {
+                width: 200px;
+                justify-content: center;
+            }
+
+            .floating-badge {
+                position: static;
+                margin-top: 20px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .stat {
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .mockup-metrics {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -465,13 +748,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span>🔮</span>
+                <span class="logo-icon">🔮</span>
                 <span>ChurnPredict</span>
             </div>
             <div class="nav-links">
                 <a href="#features">Features</a>
                 <a href="#how-it-works">How It Works</a>
-                <a href="/app" class="launch-btn">Launch App</a>
+                <a href="#models">Models</a>
+                <a href="/app" class="launch-btn">Launch App →</a>
             </div>
         </div>
     </nav>
@@ -481,14 +765,14 @@
         <div class="hero-container">
             <div class="hero-content">
                 <div class="hero-badge">
-                    🚀 Built with 3 ML Models from Scratch
+                    🚀 Enterprise-Grade ML Platform
                 </div>
                 <h1 class="hero-title">
                     Predict Customer Churn with <span>82.4% Accuracy</span>
                 </h1>
                 <p class="hero-description">
-                    Identify at-risk customers before they leave using advanced machine learning. 
-                    Test retention strategies with interactive what-if analysis.
+                    Identify at-risk customers before they leave using three advanced ML models. 
+                    Test retention strategies with interactive what-if analysis and customer segmentation.
                 </p>
                 <div class="hero-stats">
                     <div class="stat">
@@ -497,7 +781,7 @@
                     </div>
                     <div class="stat">
                         <div class="stat-number">82.4%</div>
-                        <div class="stat-label">Accuracy</div>
+                        <div class="stat-label">Best Accuracy</div>
                     </div>
                     <div class="stat">
                         <div class="stat-number">30</div>
@@ -506,27 +790,67 @@
                 </div>
                 <div class="hero-buttons">
                     <a href="/app" class="btn btn-primary">
-                        <span>🔮</span> Launch App
+                        Start Predicting →
                     </a>
                     <a href="#how-it-works" class="btn btn-secondary">
-                        <span>📖</span> How It Works
+                        How It Works
                     </a>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://via.placeholder.com/500x400/ffffff/667eea?text=Dashboard+Preview" alt="Dashboard Preview">
-                <div class="floating-card card-1">
-                    <div class="card-icon">📊</div>
-                    <div class="card-text">
-                        <h4>82.4% Accuracy</h4>
-                        <p>Logistic Regression Model</p>
+                <div class="dashboard-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-header-content">
+                            <span class="mockup-title">🔮 ChurnPredict Dashboard</span>
+                            <div class="mockup-icons">
+                                <span>📊</span>
+                                <span>👥</span>
+                                <span>⚙️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-body">
+                        <!-- Metrics -->
+                        <div class="mockup-metrics">
+                            <div class="metric-card blue">
+                                <div class="metric-label">Accuracy</div>
+                                <div class="metric-value">82.4%</div>
+                            </div>
+                            <div class="metric-card green">
+                                <div class="metric-label">Precision</div>
+                                <div class="metric-value">0.81</div>
+                            </div>
+                            <div class="metric-card red">
+                                <div class="metric-label">Recall</div>
+                                <div class="metric-value">0.79</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Prediction Result -->
+                        <div class="mockup-prediction low-risk">
+                            <div class="prediction-label">Current Prediction</div>
+                            <div class="prediction-value">✅ Low Churn Risk</div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill"></div>
+                            </div>
+                            <div class="confidence-text">Confidence: 94%</div>
+                        </div>
+                        
+                        <!-- Model Tags -->
+                        <div class="mockup-models">
+                            <span class="model-tag lr">📐 Logistic Regression</span>
+                            <span class="model-tag dt">🌳 Decision Tree</span>
+                            <span class="model-tag rf">🌲 Random Forest</span>
+                        </div>
                     </div>
                 </div>
-                <div class="floating-card card-2">
-                    <div class="card-icon">🎯</div>
-                    <div class="card-text">
-                        <h4>Customer Segments</h4>
-                        <p>3 Risk Groups</p>
+                
+                <!-- Floating Badge -->
+                <div class="floating-badge">
+                    <div class="floating-icon">🎯</div>
+                    <div>
+                        <div class="floating-title">Customer Segments</div>
+                        <div class="floating-subtitle">High · Medium · Low Risk</div>
                     </div>
                 </div>
             </div>
@@ -537,39 +861,39 @@
     <section id="features" class="features">
         <div class="features-container">
             <div class="section-title">
-                <h2>Powerful Features</h2>
-                <p>Everything you need to understand and reduce customer churn</p>
+                <h2>Everything You Need</h2>
+                <p>Powerful tools to understand and reduce customer churn</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🎯</div>
-                    <h3>Multi-Model Prediction</h3>
-                    <p>Choose from 3 ML models built from scratch: Logistic Regression, Decision Tree, and Random Forest.</p>
+                    <h3>Multi-Model Predictions</h3>
+                    <p>Logistic Regression, Decision Tree, and Random Forest - all trained from scratch with real telco data.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔄</div>
                     <h3>What-If Analysis</h3>
-                    <p>Test different scenarios in real-time. See how changes in customer behavior affect churn risk.</p>
+                    <p>Test retention strategies in real-time and see how changes affect churn probability.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Interactive Dashboard</h3>
-                    <p>Compare model performance, view feature importance, and track prediction history.</p>
+                    <p>Compare model performance, track metrics, and visualize feature importance.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">👥</div>
-                    <h3>Customer Segmentation</h3>
-                    <p>Automatically group customers into risk segments with targeted retention strategies.</p>
+                    <h3>Smart Segmentation</h3>
+                    <p>Automated customer grouping with actionable retention recommendations.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📈</div>
-                    <h3>Feature Importance</h3>
-                    <p>Understand what drives churn with detailed feature importance analysis.</p>
+                    <h3>Feature Insights</h3>
+                    <p>Understand key churn drivers with detailed feature importance analysis.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💾</div>
-                    <h3>Prediction History</h3>
-                    <p>Track all predictions with detailed history and export capabilities.</p>
+                    <h3>History & Export</h3>
+                    <p>Track all predictions and export data for further analysis.</p>
                 </div>
             </div>
         </div>
@@ -579,24 +903,54 @@
     <section id="how-it-works" class="how-it-works">
         <div class="steps-container">
             <div class="section-title">
-                <h2>How It Works</h2>
-                <p>Three simple steps to start predicting churn</p>
+                <h2>Simple Three-Step Process</h2>
+                <p>Get actionable insights in minutes</p>
             </div>
             <div class="steps-grid">
                 <div class="step">
                     <div class="step-number">1</div>
                     <h3>Enter Customer Data</h3>
-                    <p>Fill in customer information like tenure, contract type, payment method, and services used.</p>
+                    <p>Fill in customer information including tenure, contract type, services, and payment method.</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
                     <h3>Get Instant Prediction</h3>
-                    <p>Our ML models analyze the data and predict churn probability with confidence scores.</p>
+                    <p>Our ensemble models analyze patterns and deliver churn probability scores instantly.</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Take Action</h3>
-                    <p>Use what-if analysis to test retention strategies and segment customers for targeted campaigns.</p>
+                    <h3>Take Strategic Action</h3>
+                    <p>Use segmentation insights to deploy targeted retention campaigns.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Showcase -->
+    <section id="models" class="models-showcase">
+        <div class="models-container">
+            <div class="section-title">
+                <h2>Built from Scratch</h2>
+                <p>Three powerful ML models optimized for churn prediction</p>
+            </div>
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-icon">📐</div>
+                    <h3 class="model-name">Logistic Regression</h3>
+                    <div class="model-accuracy">82.4%</div>
+                    <p class="model-desc">Gradient descent optimized with L2 regularization</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-icon">🌳</div>
+                    <h3 class="model-name">Decision Tree</h3>
+                    <div class="model-accuracy">79.1%</div>
+                    <p class="model-desc">Entropy-based splitting with depth optimization</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-icon">🌲</div>
+                    <h3 class="model-name">Random Forest</h3>
+                    <div class="model-accuracy">80.7%</div>
+                    <p class="model-desc">30 trees with bootstrap sampling & feature bagging</p>
                 </div>
             </div>
         </div>
@@ -605,14 +959,14 @@
     <!-- CTA Section -->
     <section class="cta">
         <div class="cta-container">
-            <h2>Ready to reduce churn?</h2>
-            <p>Start predicting customer churn with 82.4% accuracy using our ML models built from scratch.</p>
+            <h2>Ready to reduce customer churn?</h2>
+            <p>Join businesses using ML-powered insights to retain more customers.</p>
             <div class="cta-buttons">
                 <a href="/app" class="btn btn-primary">
-                    <span>🔮</span> Launch App
+                    Launch Application →
                 </a>
-                <a href="/app/dashboard" class="btn btn-secondary">
-                    <span>📊</span> View Dashboard
+                <a href="/dashboard" class="btn btn-secondary">
+                    View Dashboard
                 </a>
             </div>
         </div>
@@ -620,17 +974,17 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p style="margin-bottom: 20px;">Built with ❤️ using Python, Flask, and ML models from scratch</p>
-        <p>
-            <a href="/app">Home</a> |
-            <a href="/app/dashboard">Dashboard</a> |
-            <a href="/app/history">History</a> |
-            <a href="/app/what-if">What-If</a> |
-            <a href="/app/segmentation">Segments</a>
-        </p>
-        <p style="margin-top: 20px; color: #a0aec0; font-size: 0.9rem;">
-            © 2026 ChurnPredict - Customer Churn Prediction Project
-        </p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/app">Home</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/history">History</a>
+                <a href="/what-if">What-If</a>
+                <a href="/segmentation">Segments</a>
+            </div>
+            <p>Built with Python, Flask, and custom ML implementations</p>
+            <p>© 2026 ChurnPredict - Customer Churn Prediction Platform</p>
+        </div>
     </footer>
 </body>
 </html>

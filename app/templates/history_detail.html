@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction Details - Churn Predictor</title>
+    <title>Prediction Details | ChurnPredict</title>
     <style>
         * {
             margin: 0;
@@ -12,179 +12,241 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 24px;
         }
         
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header h1::before {
+            content: "📋";
+            font-size: 1.5rem;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
+            color: var(--secondary);
+            font-size: 0.875rem;
         }
         
+        /* Navigation */
         .nav-bar {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
         }
         
         .nav-link {
-            color: white;
+            color: var(--secondary);
             text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
+        /* Content */
         .content {
-            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
         }
         
+        /* Back Button */
         .back-button {
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         .btn-back {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 20px;
-            background: #6c757d;
+            padding: 8px 16px;
+            background: var(--secondary);
             color: white;
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.3s;
+            font-size: 0.813rem;
+            font-weight: 500;
+            transition: all 0.2s;
         }
         
         .btn-back:hover {
-            background: #5a6268;
-            transform: translateX(-5px);
+            background: #475569;
+            transform: translateX(-2px);
         }
         
+        /* Prediction Summary */
         .prediction-summary {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
             text-align: center;
-            border: 2px solid transparent;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
         
-        .prediction-summary.churn {
-            border-color: #dc3545;
-            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.2);
+        .prediction-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
         }
         
-        .prediction-summary.stay {
-            border-color: #28a745;
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+        .prediction-summary.churn::before {
+            background: var(--danger);
+        }
+        
+        .prediction-summary.stay::before {
+            background: var(--success);
         }
         
         .model-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 16px;
             color: white;
         }
         
+        .timestamp {
+            color: var(--secondary);
+            font-size: 0.813rem;
+            margin-bottom: 20px;
+        }
+        
         .prediction-result {
-            font-size: 3em;
-            font-weight: bold;
-            margin: 20px 0;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 16px 0;
         }
         
         .prediction-result.churn {
-            color: #dc3545;
+            color: var(--danger);
         }
         
         .prediction-result.stay {
-            color: #28a745;
+            color: var(--success);
         }
         
-        .timestamp {
-            color: #6c757d;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+        .confidence {
+            font-size: 0.875rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+        
+        .probability {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-top: 12px;
         }
         
         .confidence-bar {
             width: 100%;
-            height: 20px;
-            background: #e9ecef;
-            border-radius: 10px;
+            max-width: 400px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
             overflow: hidden;
-            margin: 20px 0;
+            margin: 12px auto 0;
         }
         
         .confidence-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.5s;
-            border-radius: 10px;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s;
         }
         
+        /* Details Grid */
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
         }
         
         .details-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: var(--light);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border);
         }
         
         .details-card h3 {
-            color: #495057;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 20px;
-            font-size: 1.3em;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 10px;
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
         }
         
+        /* Feature List */
         .feature-list {
             list-style: none;
         }
@@ -192,8 +254,9 @@
         .feature-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed #dee2e6;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
         .feature-item:last-child {
@@ -201,109 +264,157 @@
         }
         
         .feature-label {
-            color: #6c757d;
-            font-weight: 500;
+            color: var(--secondary);
+            font-size: 0.813rem;
         }
         
         .feature-value {
-            font-weight: bold;
-            color: #495057;
+            font-weight: 500;
+            font-size: 0.813rem;
+            color: var(--dark);
         }
         
         .feature-value.yes {
-            color: #28a745;
+            color: var(--success);
         }
         
         .feature-value.no {
-            color: #dc3545;
+            color: var(--danger);
         }
         
+        /* Importance Items */
         .importance-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             padding: 8px 0;
         }
         
         .importance-bar {
             flex: 1;
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
             overflow: hidden;
         }
         
         .importance-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 5px;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s;
         }
         
         .importance-value {
-            min-width: 50px;
+            min-width: 45px;
             text-align: right;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
         }
         
+        /* Key Factors */
+        .key-factors {
+            margin-top: 16px;
+        }
+        
+        .factor-tag {
+            display: inline-block;
+            background: #fef2f2;
+            color: var(--danger);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 4px;
+        }
+        
+        /* Action Buttons */
         .action-buttons {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
+            gap: 12px;
             flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 24px;
         }
         
         .btn {
-            padding: 12px 30px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--dark);
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary);
+            border-color: var(--primary);
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
-            background: #6c757d;
-            color: white;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--dark);
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
         
+        /* Footer */
         .footer {
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
             padding: 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
+            text-align: center;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.75rem;
         }
         
         .footer a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
-            margin: 0 5px;
+            margin: 0 8px;
         }
         
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
+            .container {
+                padding: 16px;
             }
             
-            .prediction-result {
-                font-size: 2em;
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 20px;
             }
             
             .details-grid {
@@ -318,57 +429,74 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .prediction-result {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .prediction-summary,
+        .details-card {
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>📋 Prediction Details</h1>
-            <p>Detailed view of prediction #{{ prediction.id }}</p>
+            <h1>Prediction Details</h1>
+            <p>Detailed analysis of prediction #{{ prediction.id }}</p>
             
             <div class="nav-bar">
-                <a href="/" class="nav-link">
-                    <span>🏠</span> Home
-                </a>
-                <a href="/dashboard" class="nav-link">
-                    <span>📊</span> Dashboard
-                </a>
-                <a href="/history" class="nav-link">
-                    <span>📜</span> History
-                </a>
+                <a href="/" class="nav-link">🏠 Overview</a>
+                <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+                <a href="/history" class="nav-link">📜 History</a>
+                <a href="/what-if" class="nav-link">🎯 What-If</a>
+                <a href="/segmentation" class="nav-link">👥 Segments</a>
             </div>
         </div>
         
+        <!-- Content -->
         <div class="content">
+            <!-- Back Button -->
             <div class="back-button">
                 <a href="/history" class="btn-back">
-                    <span>←</span> Back to History
+                    ← Back to History
                 </a>
             </div>
             
             <!-- Prediction Summary -->
             <div class="prediction-summary {% if prediction.prediction == 'CHURN' %}churn{% else %}stay{% endif %}">
                 <div class="model-badge" style="background: {{ model_info[prediction.model_key].color }};">
-                    {{ prediction.model }}
+                    🔬 {{ prediction.model }}
                 </div>
                 
                 <div class="timestamp">
-                    {{ prediction.timestamp }}
+                    📅 {{ prediction.timestamp }}
                 </div>
                 
                 <div class="prediction-result {% if prediction.prediction == 'CHURN' %}churn{% else %}stay{% endif %}">
                     {% if prediction.prediction == 'CHURN' %}
-                        ⚠️ HIGH CHURN RISK
+                        ⚠️ High Churn Risk
                     {% else %}
-                        ✅ LOW CHURN RISK
+                        ✅ Low Churn Risk
                     {% endif %}
                 </div>
                 
-                <div class="confidence">
-                    Confidence: {{ prediction.confidence }}%
-                </div>
-                
+                <div class="confidence">Model Confidence: {{ prediction.confidence }}%</div>
                 <div class="confidence-bar">
                     <div class="confidence-fill" style="width: {{ prediction.confidence }}%;"></div>
                 </div>
@@ -382,14 +510,18 @@
             <div class="details-grid">
                 <!-- Customer Features -->
                 <div class="details-card">
-                    <h3>👤 Customer Features</h3>
+                    <h3>
+                        <span>👤</span>
+                        Customer Profile
+                    </h3>
                     <ul class="feature-list">
                         {% for key, value in prediction.full_features.items() %}
                             {% if key != 'id' and key != 'timestamp' and key != 'model' and key != 'model_key' and key != 'prediction' and key != 'confidence' and key != 'churn_prob' and key != 'features' and key != 'full_features' %}
                                 <li class="feature-item">
-                                    <span class="feature-label">{{ feature_labels.get(key, key) }}:</span>
+                                    <span class="feature-label">{{ feature_labels.get(key, key.replace('_', ' ').title()) }}:</span>
                                     <span class="feature-value {% if value == 1 %}yes{% elif value == 0 %}no{% endif %}">
-                                        {% if value == 1 %}Yes{% elif value == 0 %}No{% else %}{{ value }}{% endif %}
+                                        {% if value == 1 %}✓ Yes{% elif value == 0 %}✗ No{% else %}{{ value }}{% endif %}
+                                        {% if key == 'tenure' and value|int > 0 %} months{% endif %}
                                     </span>
                                 </li>
                             {% endif %}
@@ -397,19 +529,25 @@
                     </ul>
                 </div>
                 
-                <!-- Key Features (the ones that triggered) -->
+                <!-- Key Risk Factors & Model Info -->
                 <div class="details-card">
-                    <h3>🔑 Key Factors</h3>
-                    <ul class="feature-list">
+                    <h3>
+                        <span>⚠️</span>
+                        Key Risk Factors
+                    </h3>
+                    <div class="key-factors">
                         {% for feature in prediction.features %}
-                            <li class="feature-item">
-                                <span class="feature-label">{{ feature }}</span>
-                                <span class="feature-value yes">✓</span>
-                            </li>
+                            <span class="factor-tag">{{ feature_labels.get(feature, feature.replace('_', ' ').title()) }}</span>
                         {% endfor %}
-                    </ul>
+                        {% if prediction.features|length == 0 %}
+                            <p style="color: var(--secondary); font-size: 0.813rem;">No significant risk factors identified</p>
+                        {% endif %}
+                    </div>
                     
-                    <h3 style="margin-top: 25px;">📊 Model Accuracy</h3>
+                    <h3 style="margin-top: 24px;">
+                        <span>📊</span>
+                        Model Performance
+                    </h3>
                     <ul class="feature-list">
                         <li class="feature-item">
                             <span class="feature-label">Model Accuracy</span>
@@ -419,46 +557,60 @@
                             <span class="feature-label">Prediction Confidence</span>
                             <span class="feature-value">{{ prediction.confidence }}%</span>
                         </li>
+                        <li class="feature-item">
+                            <span class="feature-label">Model Type</span>
+                            <span class="feature-value">
+                                {% if prediction.model_key == 'logistic' %}Linear Classification
+                                {% elif prediction.model_key == 'tree' %}Tree-Based Learning
+                                {% else %}Ensemble Learning{% endif %}
+                            </span>
+                        </li>
                     </ul>
                 </div>
-                
-                <!-- Feature Importance -->
-                {% if feature_importance %}
-                <div class="details-card">
-                    <h3>⚡ Feature Importance</h3>
-                    {% for feature, importance in feature_importance.items() %}
-                        <div class="importance-item">
-                            <span class="feature-label">{{ feature[:25] }}{% if feature|length > 25 %}...{% endif %}</span>
-                            <div class="importance-bar">
-                                <div class="importance-fill" style="width: {{ importance * 100 }}%;"></div>
-                            </div>
-                            <span class="importance-value">{{ "%.3f"|format(importance) }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
             </div>
+            
+            <!-- Feature Importance Section (if available) -->
+            {% if feature_importance %}
+            <div class="details-card" style="margin-top: 0;">
+                <h3>
+                    <span>⚡</span>
+                    Global Feature Importance ({{ model_info[prediction.model_key].name }})
+                </h3>
+                {% for feature, importance in list(feature_importance.items())[:10] %}
+                    <div class="importance-item">
+                        <span class="feature-label">{{ feature[:30] }}{% if feature|length > 30 %}...{% endif %}</span>
+                        <div class="importance-bar">
+                            <div class="importance-fill" style="width: {{ importance * 100 }}%;"></div>
+                        </div>
+                        <span class="importance-value">{{ "%.3f"|format(importance) }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <a href="/history" class="btn btn-secondary">
-                    <span>📜</span> Back to History
+                    📜 View All History
                 </a>
                 <a href="/" class="btn btn-primary">
-                    <span>🔮</span> New Prediction
+                    🔮 New Prediction
                 </a>
                 <button onclick="window.print()" class="btn btn-secondary">
-                    <span>📄</span> Print Details
+                    🖨️ Print Report
                 </button>
             </div>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
-            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
-            <p>© 2026 Customer Churn Prediction Project | 
-                <a href="/">Home</a> | 
-                <a href="/dashboard">Dashboard</a> | 
-                <a href="/history">History</a>
+            <p>Customer Churn Prediction System | Powered by Machine Learning</p>
+            <p>
+                <a href="/">Overview</a> •
+                <a href="/dashboard">Dashboard</a> •
+                <a href="/history">History</a> •
+                <a href="/what-if">What-If</a> •
+                <a href="/segmentation">Segments</a>
             </p>
         </div>
     </div>

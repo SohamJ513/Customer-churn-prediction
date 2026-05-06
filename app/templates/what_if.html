@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What-If Analysis - Churn Predictor</title>
+    <title>What-If Analysis | ChurnPredict</title>
     <style>
         * {
             margin: 0;
@@ -12,300 +12,253 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1440px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 24px;
         }
         
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header h1::before {
+            content: "🎯";
+            font-size: 1.5rem;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+            color: var(--secondary);
+            font-size: 0.875rem;
         }
         
+        /* Navigation */
         .nav-bar {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
         }
         
         .nav-link {
-            color: white;
+            color: var(--secondary);
             text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: bold;
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
+        /* Two Column Layout */
         .content {
-            padding: 30px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 24px;
         }
         
+        /* Controls Panel */
         .controls-panel {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
         }
         
         .controls-panel h2 {
-            color: #495057;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .model-selector {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
         
         .model-selector label {
             display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .model-selector select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #dee2e6;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-size: 0.875rem;
+            font-family: inherit;
             background: white;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .model-selector select:hover {
-            border-color: #667eea;
-        }
-        
+        .model-selector select:hover,
         .model-selector select:focus {
+            border-color: var(--primary);
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         .feature-controls {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             max-height: 500px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 8px;
+        }
+        
+        .feature-controls::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .feature-controls::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 3px;
+        }
+        
+        .feature-controls::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
         }
         
         .feature-item {
-            background: white;
-            padding: 12px;
+            background: var(--light);
+            padding: 10px 12px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: transform 0.2s;
         }
         
         .feature-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: white;
+            border-color: var(--primary);
         }
         
         .feature-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
-            accent-color: #667eea;
+            accent-color: var(--primary);
         }
         
         .feature-item label {
-            cursor: pointer;
             flex: 1;
-            color: #495057;
+            font-size: 0.813rem;
             font-weight: 500;
+            color: var(--dark);
+            cursor: pointer;
         }
         
         .slider-container {
-            background: white;
-            padding: 15px;
+            background: var(--light);
+            padding: 12px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
         }
         
         .slider-container label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #495057;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 12px;
         }
         
         .slider-value {
-            float: right;
-            color: #667eea;
-            font-weight: bold;
-            background: #e9ecef;
+            color: var(--primary);
+            font-weight: 600;
+            background: white;
             padding: 2px 8px;
-            border-radius: 20px;
+            border-radius: 12px;
+            font-size: 0.75rem;
         }
         
         input[type="range"] {
             width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: #dee2e6;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
             outline: none;
             -webkit-appearance: none;
-            appearance: none;
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: #667eea;
+            background: var(--primary);
             cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s;
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.2);
-        }
-        
-        .results-panel {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .live-prediction {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .live-prediction.churn {
-            border-color: #dc3545;
-            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.2);
-        }
-        
-        .live-prediction.stay {
-            border-color: #28a745;
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
-        }
-        
-        .prediction-label {
-            font-size: 1.2em;
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-        
-        .prediction-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 15px 0;
-            transition: color 0.3s;
-        }
-        
-        .prediction-value.churn {
-            color: #dc3545;
-        }
-        
-        .prediction-value.stay {
-            color: #28a745;
-        }
-        
-        .probability-bar {
-            width: 100%;
-            height: 25px;
-            background: #e9ecef;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 15px 0;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .probability-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 12px;
-            position: relative;
-        }
-        
-        .probability-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
-        }
-        
-        .probability-text {
-            font-size: 1.2em;
-            color: #495057;
-            margin-top: 10px;
-            font-weight: 500;
-            padding: 5px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-        
-        .probability-text.highlight {
-            background-color: #fff3cd;
         }
         
         .reset-button {
@@ -314,195 +267,307 @@
         }
         
         .btn-reset {
-            background: #6c757d;
+            background: var(--secondary);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 8px 20px;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
+            font-size: 0.813rem;
             font-weight: 500;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
         .btn-reset:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+            background: #475569;
+            transform: translateY(-1px);
         }
         
-        .model-comparison {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+        /* Results Panel */
+        .results-panel {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
         }
         
-        .model-comparison h3 {
-            color: #495057;
-            margin-bottom: 15px;
-            font-size: 1.2em;
+        .results-panel h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .model-comparison h3:before {
-            content: '🤖';
-            font-size: 1.2em;
+        .live-prediction {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .live-prediction::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .live-prediction.churn::before {
+            background: var(--danger);
+        }
+        
+        .live-prediction.stay::before {
+            background: var(--success);
+        }
+        
+        .prediction-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+        
+        .prediction-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        
+        .prediction-value.churn {
+            color: var(--danger);
+        }
+        
+        .prediction-value.stay {
+            color: var(--success);
+        }
+        
+        .probability-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .probability-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease-out;
+        }
+        
+        .probability-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-top: 8px;
+        }
+        
+        /* Model Comparison */
+        .model-comparison {
+            margin-top: 24px;
+        }
+        
+        .model-comparison h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .model-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #dee2e6;
-            transition: background-color 0.2s;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--light);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
         }
         
         .model-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .model-item:last-child {
-            border-bottom: none;
+            transform: translateX(4px);
+            border-color: var(--primary);
         }
         
         .model-name {
-            font-weight: 600;
-            color: #495057;
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--dark);
         }
         
         .model-prediction {
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
         
         .model-prediction.churn {
-            background: #fee;
-            color: #dc3545;
+            background: #fef2f2;
+            color: var(--danger);
         }
         
         .model-prediction.stay {
-            background: #efe;
-            color: #28a745;
+            background: #f0fdf4;
+            color: var(--success);
         }
         
+        /* Footer */
         .footer {
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
             padding: 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
+            margin-top: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.75rem;
         }
         
         .footer a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
-            margin: 0 5px;
-            transition: color 0.3s;
+            margin: 0 8px;
         }
         
         .footer a:hover {
-            color: #764ba2;
             text-decoration: underline;
         }
         
-        @media (max-width: 768px) {
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
             .content {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 20px;
             }
             
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.5rem;
             }
             
-            .nav-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .nav-link {
-                justify-content: center;
+            .controls-panel,
+            .results-panel {
+                padding: 20px;
             }
             
             .feature-controls {
                 max-height: 400px;
             }
         }
-
-        /* Loading indicator */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-            position: relative;
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .loading::after {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            z-index: 1000;
+        .controls-panel,
+        .results-panel {
+            animation: fadeIn 0.3s ease-out;
         }
-        
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* Model-specific colors */
-        .model-logistic { border-left: 4px solid #3498db; }
-        .model-tree { border-left: 4px solid #f39c12; }
-        .model-forest { border-left: 4px solid #2ecc71; }
-
-        /* Risk level indicators */
-        .risk-low { color: #28a745; }
-        .risk-medium { color: #ffc107; }
-        .risk-high { color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🎮 What-If Analysis</h1>
-            <p>Adjust features in real-time to see how predictions change</p>
+            <h1>What-If Analysis</h1>
+            <p>Adjust customer attributes in real-time to see how churn predictions change</p>
+            
             <div class="nav-bar">
-                <a href="/" class="nav-link">🏠 Home</a>
+                <a href="/" class="nav-link">🏠 Overview</a>
                 <a href="/dashboard" class="nav-link">📊 Dashboard</a>
                 <a href="/history" class="nav-link">📜 History</a>
-                <a href="/what-if" class="nav-link active">🎮 What-If</a>
-                <a href="/segmentation" class="nav-link">🎯 Segments</a>
+                <a href="/what-if" class="nav-link active">🎯 What-If</a>
+                <a href="/segmentation" class="nav-link">👥 Segments</a>
             </div>
         </div>
         
+        <!-- Content -->
         <div class="content">
             <!-- Controls Panel -->
             <div class="controls-panel">
-                <h2>Adjust Customer Features</h2>
+                <h2>
+                    <span>⚙️</span>
+                    Customer Attributes
+                </h2>
                 
                 <div class="model-selector">
-                    <label for="model">🔧 Select Model:</label>
+                    <label for="model">Select Model</label>
                     <select id="model">
-                        <option value="logistic">Logistic Regression (82.39%)</option>
-                        <option value="tree">Decision Tree (79.12%)</option>
-                        <option value="forest" selected>Random Forest (80.68%)</option>
+                        <option value="logistic">Logistic Regression (82.4% accuracy)</option>
+                        <option value="tree">Decision Tree (79.1% accuracy)</option>
+                        <option value="forest" selected>Random Forest (80.7% accuracy) ⭐ Recommended</option>
                     </select>
                 </div>
                 
                 <div id="feature-controls" class="feature-controls">
-                    <!-- Features will be added here -->
+                    <!-- Features will be populated by JavaScript -->
                 </div>
                 
                 <div class="reset-button">
@@ -512,11 +577,14 @@
             
             <!-- Results Panel -->
             <div class="results-panel">
-                <h2>Live Prediction</h2>
+                <h2>
+                    <span>📊</span>
+                    Live Prediction
+                </h2>
                 
                 <div class="live-prediction" id="prediction-card">
                     <div class="prediction-label">Current Prediction</div>
-                    <div class="prediction-value" id="prediction-text">STAY</div>
+                    <div class="prediction-value" id="prediction-text">Low Churn Risk</div>
                     <div class="probability-bar">
                         <div class="probability-fill" id="probability-fill" style="width: 25%"></div>
                     </div>
@@ -524,53 +592,62 @@
                 </div>
                 
                 <div class="model-comparison">
-                    <h3>All Models Comparison</h3>
-                    <div class="model-item model-logistic">
+                    <h3>
+                        <span>🤖</span>
+                        All Models Comparison
+                    </h3>
+                    <div class="model-item">
                         <span class="model-name">Logistic Regression</span>
-                        <span class="model-prediction stay" id="logistic-pred">STAY</span>
+                        <span class="model-prediction stay" id="logistic-pred">Stay</span>
                     </div>
-                    <div class="model-item model-tree">
+                    <div class="model-item">
                         <span class="model-name">Decision Tree</span>
-                        <span class="model-prediction stay" id="tree-pred">STAY</span>
+                        <span class="model-prediction stay" id="tree-pred">Stay</span>
                     </div>
-                    <div class="model-item model-forest">
+                    <div class="model-item">
                         <span class="model-name">Random Forest</span>
-                        <span class="model-prediction stay" id="forest-pred">STAY</span>
+                        <span class="model-prediction stay" id="forest-pred">Stay</span>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
-            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
-            <p>© 2026 Customer Churn Prediction Project | 
-                <a href="/">Home</a> | 
-                <a href="/dashboard">Dashboard</a> | 
-                <a href="/history">History</a> | 
-                <a href="/what-if">What-If</a> | 
+            <p>Customer Churn Prediction System | Powered by Machine Learning</p>
+            <p>
+                <a href="/">Overview</a> •
+                <a href="/dashboard">Dashboard</a> •
+                <a href="/history">History</a> •
+                <a href="/what-if">What-If</a> •
                 <a href="/segmentation">Segments</a>
             </p>
         </div>
     </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
 
     <script>
-        // SIMPLE HARDCODED FEATURES
+        // Feature definitions
         const features = [
             { name: 'gender', label: 'Gender (Male)' },
             { name: 'SeniorCitizen', label: 'Senior Citizen' },
             { name: 'Partner', label: 'Has Partner' },
             { name: 'Dependents', label: 'Has Dependents' },
-            { name: 'tenure', label: 'Tenure (months)', isSlider: true },
-            { name: 'PhoneService', label: 'Has Phone Service' },
-            { name: 'MultipleLines_Yes', label: 'Has Multiple Lines' },
+            { name: 'tenure', label: 'Tenure (months)', isSlider: true, min: 0, max: 72, default: 12 },
+            { name: 'PhoneService', label: 'Phone Service' },
+            { name: 'MultipleLines_Yes', label: 'Multiple Lines' },
             { name: 'InternetService_Fiber optic', label: 'Fiber Optic Internet' },
             { name: 'InternetService_No', label: 'No Internet Service' },
-            { name: 'OnlineSecurity_Yes', label: 'Has Online Security' },
-            { name: 'OnlineBackup_Yes', label: 'Has Online Backup' },
-            { name: 'DeviceProtection_Yes', label: 'Has Device Protection' },
-            { name: 'TechSupport_Yes', label: 'Has Tech Support' },
-            { name: 'StreamingTV_Yes', label: 'Has Streaming TV' },
-            { name: 'StreamingMovies_Yes', label: 'Has Streaming Movies' },
+            { name: 'OnlineSecurity_Yes', label: 'Online Security' },
+            { name: 'OnlineBackup_Yes', label: 'Online Backup' },
+            { name: 'DeviceProtection_Yes', label: 'Device Protection' },
+            { name: 'TechSupport_Yes', label: 'Tech Support' },
+            { name: 'StreamingTV_Yes', label: 'Streaming TV' },
+            { name: 'StreamingMovies_Yes', label: 'Streaming Movies' },
             { name: 'Contract_One year', label: 'One Year Contract' },
             { name: 'Contract_Two year', label: 'Two Year Contract' },
             { name: 'PaperlessBilling', label: 'Paperless Billing' },
@@ -578,21 +655,21 @@
             { name: 'PaymentMethod_Electronic check', label: 'Electronic Check' },
             { name: 'PaymentMethod_Mailed check', label: 'Mailed Check' }
         ];
-
+        
         // Current values
         let values = {};
-
+        
         // Initialize
         function init() {
             features.forEach(f => {
-                values[f.name] = f.isSlider ? 12 : 0;
+                values[f.name] = f.isSlider ? f.default : 0;
             });
             
             renderFeatures();
             setupEventListeners();
-            updatePrediction(); // Get initial prediction
+            updatePrediction();
         }
-
+        
         // Render all features
         function renderFeatures() {
             const container = document.getElementById('feature-controls');
@@ -601,25 +678,24 @@
             container.innerHTML = '';
             
             features.forEach(f => {
-                const featureDiv = document.createElement('div');
+                const wrapper = document.createElement('div');
                 
                 if (f.isSlider) {
-                    // Slider for tenure
-                    featureDiv.className = 'slider-container';
-                    featureDiv.innerHTML = `
+                    wrapper.className = 'slider-container';
+                    wrapper.innerHTML = `
                         <label>
                             ${f.label}
                             <span class="slider-value" id="val-${f.name}">${values[f.name]}</span>
                         </label>
                         <input type="range" 
                                id="${f.name}"
-                               min="0" max="72" 
+                               min="${f.min}" 
+                               max="${f.max}" 
                                value="${values[f.name]}">
                     `;
                 } else {
-                    // Checkbox
-                    featureDiv.className = 'feature-item';
-                    featureDiv.innerHTML = `
+                    wrapper.className = 'feature-item';
+                    wrapper.innerHTML = `
                         <input type="checkbox" 
                                id="${f.name}"
                                ${values[f.name] ? 'checked' : ''}>
@@ -627,10 +703,10 @@
                     `;
                 }
                 
-                container.appendChild(featureDiv);
+                container.appendChild(wrapper);
             });
         }
-
+        
         // Setup event listeners
         function setupEventListeners() {
             // Checkboxes
@@ -651,13 +727,17 @@
             
             // Model selector
             const modelSelect = document.getElementById('model');
-            modelSelect.removeEventListener('change', updatePrediction);
-            modelSelect.addEventListener('change', updatePrediction);
+            if (modelSelect) {
+                modelSelect.removeEventListener('change', updatePrediction);
+                modelSelect.addEventListener('change', updatePrediction);
+            }
             
             // Reset button
             const resetBtn = document.getElementById('resetBtn');
-            resetBtn.removeEventListener('click', handleReset);
-            resetBtn.addEventListener('click', handleReset);
+            if (resetBtn) {
+                resetBtn.removeEventListener('click', handleReset);
+                resetBtn.addEventListener('click', handleReset);
+            }
         }
         
         function handleCheckboxChange(e) {
@@ -667,25 +747,25 @@
         
         function handleSliderInput(e) {
             values['tenure'] = parseInt(e.target.value);
-            document.getElementById('val-tenure').textContent = values['tenure'];
+            const valSpan = document.getElementById('val-tenure');
+            if (valSpan) valSpan.textContent = values['tenure'];
             updatePrediction();
         }
         
         function handleReset() {
             features.forEach(f => {
-                values[f.name] = f.isSlider ? 12 : 0;
+                values[f.name] = f.isSlider ? f.default : 0;
             });
             renderFeatures();
             setupEventListeners();
             updatePrediction();
         }
-
-        // Convert current values to feature array with proper scaling
+        
+        // Prepare features for API
         function prepareFeatures() {
-            // Calculate MonthlyCharges and TotalCharges
+            // Calculate MonthlyCharges
             let monthlyBase = 20.0;
             
-            // Use bracket notation for all properties with special characters
             if (values['PhoneService']) monthlyBase += 20.0;
             if (values['PhoneService'] && values['MultipleLines_Yes']) monthlyBase += 10.0;
             if (values['InternetService_Fiber optic']) monthlyBase += 70.0;
@@ -703,33 +783,33 @@
             monthlyBase = Math.min(monthlyBase, 140.0);
             const totalCharges = monthlyBase * (values['tenure'] || 12);
             
-            // Create raw feature array (UNSCALED)
+            // Create raw features
             const rawFeatures = [
                 values['gender'] || 0,
                 values['SeniorCitizen'] || 0,
                 values['Partner'] || 0,
                 values['Dependents'] || 0,
-                values['tenure'] || 12,           // Index 4 - tenure
+                values['tenure'] || 12,
                 values['PhoneService'] || 0,
                 values['PaperlessBilling'] || 0,
-                monthlyBase,                       // Index 7 - MonthlyCharges
-                totalCharges,                       // Index 8 - TotalCharges
-                0, // MultipleLines_No phone service
+                monthlyBase,
+                totalCharges,
+                0,
                 values['MultipleLines_Yes'] || 0,
                 values['InternetService_Fiber optic'] || 0,
                 values['InternetService_No'] || 0,
                 values['OnlineSecurity_Yes'] || 0,
-                0, // OnlineSecurity_No internet service
+                0,
                 values['OnlineBackup_Yes'] || 0,
-                0, // OnlineBackup_No internet service
+                0,
                 values['DeviceProtection_Yes'] || 0,
-                0, // DeviceProtection_No internet service
+                0,
                 values['TechSupport_Yes'] || 0,
-                0, // TechSupport_No internet service
+                0,
                 values['StreamingTV_Yes'] || 0,
-                0, // StreamingTV_No internet service
+                0,
                 values['StreamingMovies_Yes'] || 0,
-                0, // StreamingMovies_No internet service
+                0,
                 values['Contract_One year'] || 0,
                 values['Contract_Two year'] || 0,
                 values['PaymentMethod_Credit card (automatic)'] || 0,
@@ -737,139 +817,105 @@
                 values['PaymentMethod_Mailed check'] || 0
             ];
             
-            // Create SCALED features array (models were trained on scaled data)
+            // Scale features
             const scaledFeatures = [...rawFeatures];
-            
-            // Scale numerical features to match training data (0-1 range)
-            
-            // Scale tenure (max 72 months)
             scaledFeatures[4] = rawFeatures[4] / 72.0;
-            
-            // Scale MonthlyCharges (max 140)
             scaledFeatures[7] = rawFeatures[7] / 140.0;
-            
-            // Scale TotalCharges (max 10080 = 140*72)
             scaledFeatures[8] = rawFeatures[8] / 10080.0;
-            
-            // Log for debugging
-            console.log("Raw tenure:", rawFeatures[4], "Scaled tenure:", scaledFeatures[4].toFixed(4));
-            console.log("Raw MonthlyCharges:", rawFeatures[7], "Scaled MonthlyCharges:", scaledFeatures[7].toFixed(4));
-            console.log("Raw TotalCharges:", rawFeatures[8], "Scaled TotalCharges:", scaledFeatures[8].toFixed(4));
             
             return scaledFeatures;
         }
-
+        
         // Update prediction via API
+        let updateTimeout = null;
+        
         function updatePrediction() {
-            const model = document.getElementById('model').value;
-            const features = prepareFeatures();
+            // Debounce updates
+            if (updateTimeout) clearTimeout(updateTimeout);
             
-            // Show loading state
-            document.body.classList.add('loading');
-            
-            console.log(`🔍 Sending to API - Model: ${model}`);
-            console.log('Features (scaled):', features.map(f => typeof f === 'number' ? f.toFixed(4) : f));
-            
-            fetch('/api/what-if', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model, features })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Remove loading state
-                document.body.classList.remove('loading');
+            updateTimeout = setTimeout(() => {
+                const model = document.getElementById('model').value;
+                const features = prepareFeatures();
                 
-                if (data.error) {
-                    console.error('API Error:', data.error);
-                    return;
-                }
+                // Show loading
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) overlay.classList.add('active');
                 
-                console.log('✅ API Response:', data);
-                console.log(`Churn Probability: ${data.churn_probability}%`);
-                
-                // Update UI with real prediction
-                const card = document.getElementById('prediction-card');
-                const predText = document.getElementById('prediction-text');
-                const fill = document.getElementById('probability-fill');
-                const probText = document.getElementById('probability-text');
-                
-                if (!card || !predText || !fill || !probText) {
-                    console.error("Required DOM elements not found");
-                    return;
-                }
-                
-                const isChurn = data.prediction === 'CHURN';
-                const probValue = data.churn_probability;
-                
-                // Update classes and text
-                card.className = 'live-prediction ' + (isChurn ? 'churn' : 'stay');
-                predText.className = 'prediction-value ' + (isChurn ? 'churn' : 'stay');
-                predText.textContent = isChurn ? '🔴 HIGH CHURN RISK' : '🟢 LOW CHURN RISK';
-                
-                // Update probability bar with smooth animation
-                fill.style.transition = 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-                fill.style.width = probValue + '%';
-                
-                // Update probability text with highlight effect
-                probText.textContent = `Churn Probability: ${probValue.toFixed(1)}%`;
-                probText.classList.add('highlight');
-                setTimeout(() => {
-                    probText.classList.remove('highlight');
-                }, 500);
-                
-                // Update model comparisons
-                if (data.all_predictions) {
-                    console.log('All model predictions:', data.all_predictions);
+                fetch('/api/what-if', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model, features })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (overlay) overlay.classList.remove('active');
                     
-                    const logisticEl = document.getElementById('logistic-pred');
-                    const treeEl = document.getElementById('tree-pred');
-                    const forestEl = document.getElementById('forest-pred');
-                    
-                    if (logisticEl && data.all_predictions['Logistic Regression']) {
-                        logisticEl.textContent = data.all_predictions['Logistic Regression'].prediction;
-                        logisticEl.className = 'model-prediction ' + 
-                            (data.all_predictions['Logistic Regression'].prediction === 'CHURN' ? 'churn' : 'stay');
+                    if (data.error) {
+                        console.error('API Error:', data.error);
+                        return;
                     }
                     
-                    if (treeEl && data.all_predictions['Decision Tree']) {
-                        treeEl.textContent = data.all_predictions['Decision Tree'].prediction;
-                        treeEl.className = 'model-prediction ' + 
-                            (data.all_predictions['Decision Tree'].prediction === 'CHURN' ? 'churn' : 'stay');
+                    // Update UI
+                    const isChurn = data.prediction === 'CHURN';
+                    const probValue = data.churn_probability;
+                    
+                    const card = document.getElementById('prediction-card');
+                    const predText = document.getElementById('prediction-text');
+                    const fill = document.getElementById('probability-fill');
+                    const probText = document.getElementById('probability-text');
+                    
+                    if (card) {
+                        card.className = 'live-prediction ' + (isChurn ? 'churn' : 'stay');
                     }
                     
-                    if (forestEl && data.all_predictions['Random Forest']) {
-                        forestEl.textContent = data.all_predictions['Random Forest'].prediction;
-                        forestEl.className = 'model-prediction ' + 
-                            (data.all_predictions['Random Forest'].prediction === 'CHURN' ? 'churn' : 'stay');
+                    if (predText) {
+                        predText.className = 'prediction-value ' + (isChurn ? 'churn' : 'stay');
+                        predText.textContent = isChurn ? '⚠️ High Churn Risk' : '✅ Low Churn Risk';
                     }
-                }
-            })
-            .catch(error => {
-                // Remove loading state
-                document.body.classList.remove('loading');
-                console.error('❌ Fetch Error:', error);
-            });
+                    
+                    if (fill) {
+                        fill.style.width = probValue + '%';
+                    }
+                    
+                    if (probText) {
+                        probText.textContent = `Churn Probability: ${probValue.toFixed(1)}%`;
+                    }
+                    
+                    // Update comparison models
+                    if (data.all_predictions) {
+                        const logisticEl = document.getElementById('logistic-pred');
+                        const treeEl = document.getElementById('tree-pred');
+                        const forestEl = document.getElementById('forest-pred');
+                        
+                        if (logisticEl && data.all_predictions['Logistic Regression']) {
+                            const pred = data.all_predictions['Logistic Regression'].prediction;
+                            logisticEl.textContent = pred === 'CHURN' ? 'Churn' : 'Stay';
+                            logisticEl.className = 'model-prediction ' + (pred === 'CHURN' ? 'churn' : 'stay');
+                        }
+                        
+                        if (treeEl && data.all_predictions['Decision Tree']) {
+                            const pred = data.all_predictions['Decision Tree'].prediction;
+                            treeEl.textContent = pred === 'CHURN' ? 'Churn' : 'Stay';
+                            treeEl.className = 'model-prediction ' + (pred === 'CHURN' ? 'churn' : 'stay');
+                        }
+                        
+                        if (forestEl && data.all_predictions['Random Forest']) {
+                            const pred = data.all_predictions['Random Forest'].prediction;
+                            forestEl.textContent = pred === 'CHURN' ? 'Churn' : 'Stay';
+                            forestEl.className = 'model-prediction ' + (pred === 'CHURN' ? 'churn' : 'stay');
+                        }
+                    }
+                })
+                .catch(error => {
+                    if (overlay) overlay.classList.remove('active');
+                    console.error('Fetch Error:', error);
+                });
+            }, 100);
         }
-
-        // Add active class to current page link
-        function setActiveNavLink() {
-            const currentLocation = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentLocation) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-        }
-
+        
         // Start the application
         document.addEventListener('DOMContentLoaded', function() {
             init();
-            setActiveNavLink();
         });
     </script>
 </body>

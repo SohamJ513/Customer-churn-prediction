@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Churn Predictor</title>
+    <title>Telco Churn Predictor | Customer Retention Intelligence</title>
     <style>
         * {
             margin: 0;
@@ -12,229 +12,250 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            padding: 24px;
         }
         
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 30px 20px;
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header h1::before {
+            content: "🔮";
+            font-size: 1.5rem;
         }
         
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
+            color: var(--secondary);
+            font-size: 0.875rem;
             margin-bottom: 20px;
         }
         
+        /* Navigation */
         .nav-bar {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
         }
         
         .nav-link {
-            color: white;
+            color: var(--secondary);
             text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 500;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: bold;
+            background: #f1f5f9;
+            color: var(--primary);
         }
         
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            padding: 30px 30px 0;
+            margin-bottom: 24px;
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
+            background: var(--card-bg);
             border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         
         .stat-value {
-            font-size: 2.2em;
-            font-weight: bold;
-            color: #667eea;
-            line-height: 1.2;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
         }
         
         .stat-label {
-            color: #6c757d;
-            font-size: 0.9em;
-            font-weight: 500;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
+            color: var(--secondary);
         }
         
+        /* Segmentation Banner */
         .segmentation-banner {
-            background: linear-gradient(135deg, #e8eef7 0%, #dae3f0 100%);
+            background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(37,99,235,0.02) 100%);
             border-radius: 12px;
-            margin: 25px 30px 0;
-            padding: 20px 25px;
+            margin-bottom: 24px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 20px;
-            border: 1px solid #cbd5e0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
         }
         
         .segmentation-content {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
             flex-wrap: wrap;
         }
         
         .segmentation-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8em;
+            font-size: 1.5rem;
             color: white;
         }
         
         .segmentation-text h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            margin-bottom: 5px;
+            font-size: 1rem;
             font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
         }
         
         .segmentation-text p {
-            color: #4a5568;
-            font-size: 0.95em;
+            font-size: 0.813rem;
+            color: var(--secondary);
         }
         
         .risk-tags {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         
         .risk-tag {
             padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.8em;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.3px;
         }
         
         .risk-tag.high {
-            background: #fee;
-            color: #c53030;
-            border: 1px solid #feb2b2;
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fecaca;
         }
         
         .risk-tag.medium {
-            background: #fef3c7;
-            color: #b45309;
+            background: #fffbeb;
+            color: var(--warning);
             border: 1px solid #fde68a;
         }
         
         .risk-tag.low {
-            background: #def7ec;
-            color: #047857;
-            border: 1px solid #a7f3d0;
+            background: #f0fdf4;
+            color: var(--success);
+            border: 1px solid #bbf7d0;
         }
         
         .btn-segments {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary);
             color: white;
-            padding: 10px 24px;
-            border-radius: 10px;
+            padding: 8px 20px;
+            border-radius: 8px;
             text-decoration: none;
+            font-size: 0.875rem;
             font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.2s;
         }
         
         .btn-segments:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
         
+        /* Models Section */
         .models-section {
-            padding: 30px 30px 20px;
+            margin-bottom: 32px;
         }
         
-        .models-section h2 {
-            color: #2d3748;
-            font-size: 1.5em;
-            margin-bottom: 20px;
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .model-cards {
+        .models-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
         
         .model-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 16px;
-            padding: 25px;
-            transition: all 0.3s;
-            border: 1px solid #dee2e6;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            transition: all 0.2s;
             position: relative;
             overflow: hidden;
         }
@@ -245,126 +266,142 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
         }
         
-        .model-card.logistic::before { background: #3498db; }
-        .model-card.tree::before { background: #f39c12; }
-        .model-card.forest::before { background: #2ecc71; }
+        .model-card.logistic::before { background: var(--info); }
+        .model-card.tree::before { background: var(--warning); }
+        .model-card.forest::before { background: var(--success); }
         
         .model-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
         
         .model-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .model-name {
-            font-size: 1.3em;
+            font-size: 1rem;
             font-weight: 600;
-            color: #2d3748;
+            color: var(--dark);
         }
         
         .model-badge {
-            background: #edf2f7;
-            color: #4a5568;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
+            background: #f1f5f9;
+            color: var(--secondary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.688rem;
             font-weight: 600;
         }
         
         .model-accuracy {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
         
-        .model-accuracy.logistic { color: #3498db; }
-        .model-accuracy.tree { color: #f39c12; }
-        .model-accuracy.forest { color: #2ecc71; }
+        .model-accuracy.logistic { color: var(--info); }
+        .model-accuracy.tree { color: var(--warning); }
+        .model-accuracy.forest { color: var(--success); }
         
         .model-description {
-            color: #718096;
-            font-size: 0.9em;
-            line-height: 1.5;
+            color: var(--secondary);
+            font-size: 0.813rem;
+            line-height: 1.4;
         }
         
+        /* Form Section */
         .form-section {
-            padding: 30px;
-            background: #f8f9fa;
-            border-top: 1px solid #dee2e6;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
         }
         
         .form-section h2 {
-            color: #2d3748;
-            font-size: 1.5em;
-            margin-bottom: 25px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .form-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        
         .model-selector {
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         .model-selector label {
             display: block;
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--dark);
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #2d3748;
         }
         
         .model-selector select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: inherit;
             background: white;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
         .model-selector select:hover,
         .model-selector select:focus {
-            border-color: #667eea;
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         
+        /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+        
+        .features-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .features-grid::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        
+        .features-grid::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
         }
         
         .feature-item {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            border-radius: 10px;
+            background: #f8fafc;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             transition: all 0.2s;
-            border: 1px solid #e2e8f0;
         }
         
         .feature-item:hover {
             background: white;
-            border-color: #667eea;
-            transform: translateX(5px);
+            border-color: var(--primary);
         }
         
         .feature-item label {
@@ -372,88 +409,106 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
+            font-size: 0.813rem;
         }
         
         .feature-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
-            accent-color: #667eea;
+            accent-color: var(--primary);
         }
         
         .feature-item input[type="number"] {
             width: 100%;
-            padding: 8px;
+            padding: 6px 8px;
             margin-top: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             border-radius: 6px;
-            transition: all 0.3s;
+            font-size: 0.813rem;
+            transition: all 0.2s;
         }
         
         .feature-item input[type="number"]:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         
         .feature-name {
             font-weight: 500;
-            color: #2d3748;
+            color: var(--dark);
         }
         
+        /* Submit Button */
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 24px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            background: var(--primary-dark);
+            transform: translateY(-1px);
         }
         
+        /* Footer */
         .footer {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            padding: 25px;
-            background: #f8f9fa;
-            color: #718096;
-            border-top: 1px solid #dee2e6;
+            border: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.75rem;
         }
         
         .footer a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
-            margin: 0 10px;
-            transition: color 0.3s;
+            margin: 0 8px;
         }
         
         .footer a:hover {
-            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                padding: 20px 20px 0;
+            .container {
+                padding: 16px;
             }
             
-            .model-cards {
+            .header {
+                padding: 20px;
+            }
+            
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
             .segmentation-banner {
-                margin: 20px 20px 0;
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -469,35 +524,15 @@
             
             .features-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .form-section {
-                padding: 20px;
-            }
-            
-            .form-card {
-                padding: 20px;
+                max-height: 300px;
             }
         }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .risk-tags {
-                flex-wrap: wrap;
-            }
-        }
-
-        @keyframes fadeInUp {
+        
+        /* Animation */
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -505,44 +540,27 @@
             }
         }
         
-        .stat-card, .model-card, .segmentation-banner {
-            animation: fadeInUp 0.6s ease-out;
-            animation-fill-mode: both;
+        .stat-card,
+        .model-card,
+        .segmentation-banner,
+        .form-section {
+            animation: fadeIn 0.3s ease-out;
         }
-        
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        .segmentation-banner { animation-delay: 0.5s; }
-        .model-card:nth-child(1) { animation-delay: 0.6s; }
-        .model-card:nth-child(2) { animation-delay: 0.7s; }
-        .model-card:nth-child(3) { animation-delay: 0.8s; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🔮 Customer Churn Prediction</h1>
-            <p>Predict which customers are likely to churn using three different ML models built from scratch</p>
+            <h1>Customer Churn Prediction</h1>
+            <p>Predict customer churn risk using ensemble ML models trained on telco data</p>
             
-            <!-- Navigation Bar -->
             <div class="nav-bar">
-                <a href="/" class="nav-link active">
-                    <span>🏠</span> Home
-                </a>
-                <a href="/dashboard" class="nav-link">
-                    <span>📊</span> Dashboard
-                </a>
-                <a href="/history" class="nav-link">
-                    <span>📜</span> History
-                </a>
-                <a href="/what-if" class="nav-link">
-                    <span>🎮</span> What-If
-                </a>
-                <a href="/segmentation" class="nav-link">
-                    <span>🎯</span> Segments
-                </a>
+                <a href="/" class="nav-link active">🏠 Overview</a>
+                <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+                <a href="/history" class="nav-link">📜 History</a>
+                <a href="/what-if" class="nav-link">🎯 What-If</a>
+                <a href="/segmentation" class="nav-link">👥 Segments</a>
             </div>
         </div>
         
@@ -562,279 +580,275 @@
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="predictionCount">0</div>
-                <div class="stat-label">Predictions</div>
+                <div class="stat-label">Predictions Made</div>
             </div>
         </div>
         
-        <!-- Segmentation Banner (Clean Version) -->
+        <!-- Segmentation Banner (appears after 5+ predictions) -->
         <div class="segmentation-banner" id="segmentationPreview" style="display: none;">
             <div class="segmentation-content">
                 <div class="segmentation-icon">🎯</div>
                 <div class="segmentation-text">
-                    <h3>Customer Segments Ready</h3>
-                    <p>We've grouped your predictions into risk segments with tailored recommendations.</p>
+                    <h3>Customer Segmentation Ready</h3>
+                    <p>View risk-based grouping with retention recommendations</p>
                 </div>
                 <div class="risk-tags">
-                    <span class="risk-tag high">🔥 High Risk</span>
-                    <span class="risk-tag medium">⚠️ Medium Risk</span>
-                    <span class="risk-tag low">✅ Low Risk</span>
+                    <span class="risk-tag high">High Risk</span>
+                    <span class="risk-tag medium">Medium Risk</span>
+                    <span class="risk-tag low">Low Risk</span>
                 </div>
             </div>
             <a href="/segmentation" class="btn-segments">
-                <span>🎯</span> View Segments
+                View Segments →
             </a>
         </div>
         
-        <!-- Models Section -->
+        <!-- Models Overview -->
         <div class="models-section">
-            <h2>📊 Available Models</h2>
-            <div class="model-cards">
-                <!-- Logistic Regression -->
+            <div class="section-title">
+                <span>🤖</span> Available Models
+            </div>
+            <div class="models-grid">
                 <div class="model-card logistic">
                     <div class="model-header">
                         <span class="model-name">Logistic Regression</span>
                         <span class="model-badge">Linear</span>
                     </div>
-                    <div class="model-accuracy logistic">82.39%</div>
-                    <div class="model-description">Gradient descent optimized linear model with L2 regularization</div>
+                    <div class="model-accuracy logistic">82.4%</div>
+                    <div class="model-description">Gradient descent optimized with L2 regularization</div>
                 </div>
                 
-                <!-- Decision Tree -->
                 <div class="model-card tree">
                     <div class="model-header">
                         <span class="model-name">Decision Tree</span>
-                        <span class="model-badge">Tree</span>
+                        <span class="model-badge">Tree-Based</span>
                     </div>
-                    <div class="model-accuracy tree">79.12%</div>
-                    <div class="model-description">Entropy-based splitting with depth optimization to prevent overfitting</div>
+                    <div class="model-accuracy tree">79.1%</div>
+                    <div class="model-description">Entropy splitting with depth optimization</div>
                 </div>
                 
-                <!-- Random Forest -->
                 <div class="model-card forest">
                     <div class="model-header">
                         <span class="model-name">Random Forest</span>
                         <span class="model-badge">Ensemble</span>
                     </div>
-                    <div class="model-accuracy forest">80.68%</div>
-                    <div class="model-description">30 trees with bootstrap sampling and feature bagging</div>
+                    <div class="model-accuracy forest">80.7%</div>
+                    <div class="model-description">30 trees with bootstrap sampling</div>
                 </div>
             </div>
         </div>
         
         <!-- Prediction Form -->
         <div class="form-section">
-            <h2>📝 Enter Customer Information</h2>
-            <div class="form-card">
-                <form action="/predict" method="POST">
-                    <div class="model-selector">
-                        <label for="model">Select Model:</label>
-                        <select name="model" id="model" required>
-                            <option value="logistic">Logistic Regression (82.39% accuracy)</option>
-                            <option value="tree">Decision Tree (79.12% accuracy)</option>
-                            <option value="forest">Random Forest (80.68% accuracy)</option>
-                        </select>
+            <h2>
+                <span>📝</span> Customer Information
+            </h2>
+            
+            <form action="/predict" method="POST">
+                <div class="model-selector">
+                    <label for="model">Select Prediction Model</label>
+                    <select name="model" id="model" required>
+                        <option value="logistic">Logistic Regression (82.4% accuracy)</option>
+                        <option value="tree">Decision Tree (79.1% accuracy)</option>
+                        <option value="forest">Random Forest (80.7% accuracy)</option>
+                    </select>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="gender" value="Yes">
+                            <span class="feature-name">Gender (Male)</span>
+                        </label>
                     </div>
                     
-                    <div class="features-grid">
-                        <!-- All feature checkboxes remain the same -->
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="gender">
-                                <span class="feature-name">Gender (Male)</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="SeniorCitizen">
-                                <span class="feature-name">Senior Citizen</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="Partner">
-                                <span class="feature-name">Has Partner</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="Dependents">
-                                <span class="feature-name">Has Dependents</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <span class="feature-name">Tenure (months)</span>
-                            </label>
-                            <input type="number" name="tenure" placeholder="Enter months" min="0" max="100" step="1" value="12">
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="PhoneService">
-                                <span class="feature-name">Has Phone Service</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="MultipleLines_Yes">
-                                <span class="feature-name">Has Multiple Lines</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="InternetService_Fiber optic">
-                                <span class="feature-name">Fiber Optic Internet</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="InternetService_No">
-                                <span class="feature-name">No Internet Service</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="OnlineSecurity_Yes">
-                                <span class="feature-name">Has Online Security</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="OnlineBackup_Yes">
-                                <span class="feature-name">Has Online Backup</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="DeviceProtection_Yes">
-                                <span class="feature-name">Has Device Protection</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="TechSupport_Yes">
-                                <span class="feature-name">Has Tech Support</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="StreamingTV_Yes">
-                                <span class="feature-name">Has Streaming TV</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="StreamingMovies_Yes">
-                                <span class="feature-name">Has Streaming Movies</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="Contract_One year">
-                                <span class="feature-name">One Year Contract</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="Contract_Two year">
-                                <span class="feature-name">Two Year Contract</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="PaperlessBilling">
-                                <span class="feature-name">Paperless Billing</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="PaymentMethod_Credit card (automatic)">
-                                <span class="feature-name">Credit Card (Auto)</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="PaymentMethod_Electronic check">
-                                <span class="feature-name">Electronic Check</span>
-                            </label>
-                        </div>
-                        
-                        <div class="feature-item">
-                            <label>
-                                <input type="checkbox" name="PaymentMethod_Mailed check">
-                                <span class="feature-name">Mailed Check</span>
-                            </label>
-                        </div>
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="SeniorCitizen" value="Yes">
+                            <span class="feature-name">Senior Citizen</span>
+                        </label>
                     </div>
                     
-                    <button type="submit" class="submit-btn">
-                        <span>🔍</span> Predict Churn Risk
-                    </button>
-                </form>
-            </div>
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="Partner" value="Yes">
+                            <span class="feature-name">Has Partner</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="Dependents" value="Yes">
+                            <span class="feature-name">Has Dependents</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <span class="feature-name">Tenure (months)</span>
+                        </label>
+                        <input type="number" name="tenure" placeholder="0-72 months" min="0" max="72" step="1" value="12">
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="PhoneService" value="Yes">
+                            <span class="feature-name">Phone Service</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="MultipleLines_Yes" value="Yes">
+                            <span class="feature-name">Multiple Lines</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="InternetService_Fiber optic" value="Yes">
+                            <span class="feature-name">Fiber Optic Internet</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="InternetService_No" value="Yes">
+                            <span class="feature-name">No Internet Service</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="OnlineSecurity_Yes" value="Yes">
+                            <span class="feature-name">Online Security</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="OnlineBackup_Yes" value="Yes">
+                            <span class="feature-name">Online Backup</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="DeviceProtection_Yes" value="Yes">
+                            <span class="feature-name">Device Protection</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="TechSupport_Yes" value="Yes">
+                            <span class="feature-name">Tech Support</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="StreamingTV_Yes" value="Yes">
+                            <span class="feature-name">Streaming TV</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="StreamingMovies_Yes" value="Yes">
+                            <span class="feature-name">Streaming Movies</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="Contract_One year" value="Yes">
+                            <span class="feature-name">One Year Contract</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="Contract_Two year" value="Yes">
+                            <span class="feature-name">Two Year Contract</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="PaperlessBilling" value="Yes">
+                            <span class="feature-name">Paperless Billing</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="PaymentMethod_Credit card (automatic)" value="Yes">
+                            <span class="feature-name">Credit Card (Auto)</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="PaymentMethod_Electronic check" value="Yes">
+                            <span class="feature-name">Electronic Check</span>
+                        </label>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <label>
+                            <input type="checkbox" name="PaymentMethod_Mailed check" value="Yes">
+                            <span class="feature-name">Mailed Check</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    Predict Churn Risk →
+                </button>
+            </form>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
-            <p>Built with ❤️ using Python, Flask, and ML models from scratch</p>
-            <p>© 2026 Customer Churn Prediction Project | 
-                <a href="/">Home</a> | 
-                <a href="/dashboard">Dashboard</a> | 
-                <a href="/history">History</a> | 
-                <a href="/what-if">What-If</a> | 
+            <p>Customer Churn Prediction System | Powered by Machine Learning</p>
+            <p>
+                <a href="/">Overview</a> •
+                <a href="/dashboard">Dashboard</a> •
+                <a href="/history">History</a> •
+                <a href="/what-if">What-If</a> •
                 <a href="/segmentation">Segments</a>
             </p>
         </div>
     </div>
 
     <script>
-        // Fetch prediction count from history
-        fetch('/history/export')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('predictionCount').textContent = data.length;
-                
-                // Show segmentation banner if enough predictions
-                const segmentationBanner = document.getElementById('segmentationPreview');
-                if (data.length >= 5) {
-                    segmentationBanner.style.display = 'flex';
-                } else {
-                    segmentationBanner.style.display = 'none';
+        // Fetch prediction count from history endpoint
+        async function updatePredictionCount() {
+            try {
+                const response = await fetch('/history/export');
+                if (response.ok) {
+                    const data = await response.json();
+                    const count = Array.isArray(data) ? data.length : 0;
+                    document.getElementById('predictionCount').textContent = count;
+                    
+                    // Show segmentation banner after 5 predictions
+                    const segmentationBanner = document.getElementById('segmentationPreview');
+                    if (segmentationBanner) {
+                        segmentationBanner.style.display = count >= 5 ? 'flex' : 'none';
+                    }
                 }
-            })
-            .catch(() => {
+            } catch (error) {
+                console.log('History not available yet');
                 document.getElementById('predictionCount').textContent = '0';
-            });
+            }
+        }
         
-        // Add active class to current page link
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentLocation = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentLocation) {
-                    link.style.background = 'rgba(255, 255, 255, 0.3)';
-                    link.style.fontWeight = 'bold';
-                }
-            });
-        });
+        // Run on page load
+        updatePredictionCount();
+        
+        // Optional: Refresh count every 30 seconds
+        setInterval(updatePredictionCount, 30000);
     </script>
 </body>
 </html>
