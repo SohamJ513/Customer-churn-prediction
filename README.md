@@ -1,79 +1,94 @@
-# Customer Churn Prediction System
+---
+title: Customer Churn Prediction System
+emoji: 🔮
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
+# 🔮 Customer Churn Prediction System
 
 ML-based web application to predict customer churn for telecom companies.
 
-## Features
+## 📊 Model Performance
+
+| Model | Accuracy | Precision | Recall |
+|-------|----------|-----------|--------|
+| Logistic Regression | 82.4% | 0.81 | 0.79 |
+| Decision Tree | 79.1% | 0.76 | 0.72 |
+| Random Forest | 80.7% | 0.79 | 0.76 |
+
+## 🎯 Features
+
 - Customer churn prediction using multiple ML models
-- Interactive dashboard
-- What-if analysis
-- Customer segmentation
+- Interactive dashboard with performance metrics
+- What-if analysis for scenario testing
+- Automatic customer segmentation
 - Historical predictions tracking
+- Feature importance visualization
 
-## Technologies
-- Flask (Web framework)
-- Scikit-learn (ML models)
-- Pandas & NumPy (Data processing)
-- Matplotlib & Seaborn (Visualizations)
+## 🛠️ Technologies
 
-## Installation
+- **Backend**: Flask (Web framework)
+- **ML Models**: Scikit-learn (3 models trained from scratch)
+- **Data Processing**: Pandas & NumPy
+- **Visualizations**: Matplotlib, Seaborn, Plotly
+- **Deployment**: Docker, Hugging Face Spaces
+
+## 📁 Project Structure
+├── app.py # Flask web application
+├── requirements.txt # Python dependencies
+├── Dockerfile # Container configuration
+├── templates/ # HTML templates
+├── models/ # Trained ML models (.pkl files)
+├── static/ # CSS and JavaScript files
+└── data/ # Dataset files
+
+text
+
+## 🚀 Installation
 
 1. Clone the repository
 ```bash
 git clone <your-repo-url>
 cd Customer-churn-prediction-using-ML
 
-2. Create a virtual environment
+Create a virtual environment
+bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3. Install dependencies
+Install dependencies
+bash
 pip install -r requirements.txt
+Run the application
 
-4. Run the application
+bash
 python app.py
 
-Models Used
-1. Logistic Regression
-2. Decision Tree
-3. Random Forest
+🤖 Models Used
+Logistic Regression - Gradient descent optimized with L2 regularization
 
-Project Structure
-├── app/           # Flask web application
-├── src/           # ML model code
-├── data/          # Dataset
-├── notebooks/     # EDA notebooks
-└── models/        # Saved models (.pkl files - not in git)
+Decision Tree - Entropy-based splitting with depth optimization
 
-Dataset 
+Random Forest - 30 trees with bootstrap sampling & feature bagging
+
+📊 Dataset
 Telco Customer Churn dataset from IBM
 
-## **Step 3: Initialize Git and push**
+🐳 Docker Deployment
+Build the Docker image
 
-Run these commands in your terminal:
+bash
+docker build -t churn-predictor .
+Run the container
 
-```bash
-# Initialize git repository
-git init
+bash
+docker run -p 7860:7860 churn-predictor
 
-# Add all necessary files
-git add .gitignore
-git add requirements.txt
-git add README.md
-git add src/
-git add app/
-git add notebooks/
-git add data/
-git add *.py
+📝 License
+MIT License - feel free to use and modify!
 
-# Check what will be committed
-git status
-
-# Commit the files
-git commit -m "Initial commit: Customer churn prediction system"
-
-# Add your GitHub repository (replace with your repo URL)
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-
-# Push to GitHub
-git branch -M main
-git push -u origin main

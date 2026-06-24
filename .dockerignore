@@ -1,0 +1,61 @@
+# Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Build artifacts
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# Virtual environments
+venv
+env
+.venv
+ENV
+
+# Version control
+.git
+.gitignore
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+
+# Documentation
+README.md
+*.md
+
+# Testing
+tests
+test_*.py
+*_test.py
+
+# Jupyter notebooks
+*.ipynb
+
+# Large files that shouldn't be in container
+*.pkl
+*.h5
+*.pt
+*.pth
